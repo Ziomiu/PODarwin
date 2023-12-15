@@ -3,13 +3,39 @@ package agh.ics.oop.model.World.Layers;
 import agh.ics.oop.model.World.Phases.*;
 
 public interface MapLayer {
-    boolean handle (InitAnimalsPhase phase);
-    boolean handle (CleanupPhase phase);
-    boolean handle (MovePhase phase);
-    boolean handle (EatPhase phase);
-    boolean handle (ReproducePhase phase);
-    boolean handle (GrowGrassPhase phase);
-    boolean handle (DisplayPhase phase);
-    MapLayer getNext();
-    MapLayer setNext(MapLayer phase);
+    default boolean handle(InitAnimalsPhase phase) {
+        return false;
+    }
+
+    default boolean handle(CleanupPhase phase) {
+        return false;
+    }
+
+    default boolean handle(MovePhase phase) {
+        return false;
+    }
+
+    default boolean handle(EatPhase phase) {
+        return false;
+    }
+
+    default boolean handle(ReproducePhase phase) {
+        return false;
+    }
+
+    default boolean handle(GrowGrassPhase phase) {
+        return false;
+    }
+
+    default boolean handle(DisplayPhase phase) {
+        return false;
+    }
+
+    default MapLayer getNext() {
+        return null;
+    }
+
+    default MapLayer setNext(MapLayer phase) {
+        return null;
+    }
 }

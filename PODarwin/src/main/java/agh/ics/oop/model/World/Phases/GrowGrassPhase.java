@@ -8,6 +8,7 @@ import java.util.Vector;
 
 public class GrowGrassPhase implements Phase {
     private HashSet<Vector2D> blockedFields;
+
     @Override
     public void accept(MapLayer layer) {
 

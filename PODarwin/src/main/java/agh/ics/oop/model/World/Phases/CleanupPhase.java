@@ -7,10 +7,12 @@ import agh.ics.oop.model.World.Layers.MapLayer;
 public class CleanupPhase implements Phase {
     private Animal[] removedAnimals;
     private Grass[] eatenGrass;
+
     @Override
     public void accept(MapLayer layer) {
 
     }
+
     public Animal[] getRemovedAnimals() {
         return removedAnimals;
     }

@@ -9,6 +9,7 @@ import java.util.HashMap;
 public class DisplayPhase implements Phase {
     private MapChangeSubscriber mapChangeSubscriber;
     private HashMap<Integer, Drawable[]> drawableElements;
+
     @Override
     public void accept(MapLayer layer) {
 
