@@ -1,15 +1,19 @@
 package agh.ics.oop.model.Classes;
 
 public class Grass implements WorldElement, Drawable {
-    private Vector2D position;
+    private final Vector2D position;
+
+    public Grass(Vector2D position) {
+        this.position = position;
+    }
 
     @Override
     public Vector2D getPosition() {
-        return null;
+        return position;
     }
 
     @Override
     public void draw() {
-
+        // todo
     }
 }
