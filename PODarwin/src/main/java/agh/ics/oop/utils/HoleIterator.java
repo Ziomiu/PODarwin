@@ -1,6 +1,6 @@
 package agh.ics.oop.utils;
 
-import agh.ics.oop.model.Classes.Boundry;
+import agh.ics.oop.model.Classes.Boundary;
 import agh.ics.oop.model.Classes.Vector2D;
 
 import java.util.Iterator;
@@ -15,9 +15,9 @@ public class HoleIterator implements Iterator<Vector2D>, Iterable<Vector2D> {
     private final int maxHeight;
     private final int count;
 
-    public HoleIterator(Boundry boundry, int count) {
-        this.maxWidth = boundry.width();
-        this.maxHeight = boundry.height();
+    public HoleIterator(Boundary boundary, int count) {
+        this.maxWidth = boundary.width();
+        this.maxHeight = boundary.height();
         this.count = 2 * count;
         this.allPositions = generateAllPositions();
     }

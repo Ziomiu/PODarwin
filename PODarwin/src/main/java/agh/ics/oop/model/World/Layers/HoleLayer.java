@@ -1,7 +1,7 @@
 package agh.ics.oop.model.World.Layers;
 
 import agh.ics.oop.model.Classes.Animal;
-import agh.ics.oop.model.Classes.Boundry;
+import agh.ics.oop.model.Classes.Boundary;
 import agh.ics.oop.model.Classes.Vector2D;
 import agh.ics.oop.model.World.Phases.*;
 import agh.ics.oop.utils.HoleIterator;
@@ -16,11 +16,11 @@ public class HoleLayer implements MapLayer {
 
     private HashMap<Vector2D, Vector2D> holes;
 
-    public HoleLayer(Boundry boundry, int numOfHoles) {
-        if (boundry.numberOfFields() / 2 < numOfHoles) {
+    public HoleLayer(Boundary boundary, int numOfHoles) {
+        if (boundary.numberOfFields() / 2 < numOfHoles) {
             throw new IllegalArgumentException("This many holes cant fit on map");
         }
-        HoleIterator holeIterator = new HoleIterator(boundry, numOfHoles);
+        HoleIterator holeIterator = new HoleIterator(boundary, numOfHoles);
         HashMap<Vector2D, Vector2D> holeMap = new HashMap<>();
         Iterator<Vector2D> iterator = holeIterator.iterator();
         while (iterator.hasNext()) {
@@ -51,7 +51,7 @@ public class HoleLayer implements MapLayer {
         return true;
     }
 
-    //For now only for testing purposes
+
     public HashMap<Vector2D, Vector2D> getHoles() {
         return holes;
     }

@@ -1,6 +1,6 @@
 package agh.ics.oop.model.Classes;
 
-public record Boundry(Vector2D lower, Vector2D upper) {
+public record Boundary(Vector2D lower, Vector2D upper) {
 
     public int width() {
         return Math.abs(upper.x() - lower.x());
