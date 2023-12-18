@@ -17,4 +17,8 @@ public class GrowGrassPhase implements Phase {
     public HashSet<Vector2D> getBlockedFields() {
         return blockedFields;
     }
+
+    public void setBlockedFields(HashSet<Vector2D> blockedFields) {
+        this.blockedFields = blockedFields;
+    }
 }
