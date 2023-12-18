@@ -16,5 +16,9 @@ public class MovePhase implements Phase {
     public HashMap<Animal, Vector2D> getNewAnimalMoves() {
         return newAnimalMoves;
     }
+
+    public void setNewAnimalMoves(HashMap<Animal, Vector2D> newAnimalMoves) {
+        this.newAnimalMoves = newAnimalMoves;
+    }
 }
 
