@@ -58,4 +58,8 @@ public class Animal implements WorldElement, Drawable {
     public Genome getCurrentGenome() {
         return currentGenome;
     }
+
+    public void setCurrentGenome(Genome genome) {
+        currentGenome = genome;
+    }
 }
