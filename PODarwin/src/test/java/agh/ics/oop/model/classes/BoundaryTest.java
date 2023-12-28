@@ -1,7 +1,5 @@
 package agh.ics.oop.model.classes;
 
-import agh.ics.oop.model.Classes.Boundary;
-import agh.ics.oop.model.Classes.Vector2D;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

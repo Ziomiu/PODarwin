@@ -1,7 +1,6 @@
 package agh.ics.oop.model.classes;
 
-import agh.ics.oop.model.Classes.AlternatingGenomeSequence;
-import agh.ics.oop.model.EnumClasses.Genome;
+import agh.ics.oop.model.enums.Genome;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

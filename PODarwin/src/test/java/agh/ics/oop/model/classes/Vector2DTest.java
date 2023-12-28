@@ -1,6 +1,5 @@
 package agh.ics.oop.model.classes;
 
-import agh.ics.oop.model.Classes.Vector2D;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 

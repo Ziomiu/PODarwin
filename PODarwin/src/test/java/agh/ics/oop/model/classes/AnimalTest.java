@@ -1,10 +1,6 @@
 package agh.ics.oop.model.classes;
 
-import agh.ics.oop.model.Classes.Animal;
-import agh.ics.oop.model.Classes.GenomeSequence;
-import agh.ics.oop.model.Classes.OrderedGenomeSequence;
-import agh.ics.oop.model.Classes.Vector2D;
-import agh.ics.oop.model.EnumClasses.Genome;
+import agh.ics.oop.model.enums.Genome;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

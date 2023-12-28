@@ -1,7 +1,7 @@
 package agh.ics.oop.utils;
 
-import agh.ics.oop.model.Classes.Boundary;
-import agh.ics.oop.model.Classes.Vector2D;
+import agh.ics.oop.model.classes.Boundary;
+import agh.ics.oop.model.classes.Vector2D;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
