@@ -6,9 +6,7 @@ import agh.ics.oop.model.classes.Vector2D;
 import agh.ics.oop.model.world.phases.*;
 import agh.ics.oop.utils.HoleIterator;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -28,6 +26,7 @@ public class HoleLayer implements MapLayer {
             if (iterator.hasNext()) {
                 Vector2D value = iterator.next();
                 holeMap.put(key, value);
+                holeMap.put(value, key);
             }
         }
         this.holes = holeMap;
@@ -57,6 +56,12 @@ public class HoleLayer implements MapLayer {
     }
 
     public void setHoles(HashMap<Vector2D, Vector2D> newHoles) {
-        this.holes = newHoles;
+        HashMap<Vector2D, Vector2D> newData = new HashMap<>();
+        for (var entry : newHoles.entrySet()) {
+            newData.put(entry.getKey(), entry.getValue());
+            newData.put(entry.getValue(), entry.getKey());
+        }
+
+        this.holes = newData;
     }
 }
