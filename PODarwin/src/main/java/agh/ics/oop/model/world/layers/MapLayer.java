@@ -3,7 +3,7 @@ package agh.ics.oop.model.world.layers;
 import agh.ics.oop.model.world.phases.*;
 
 public interface MapLayer {
-    default boolean handle(InitAnimalsPhase phase) {
+    default boolean handle(InitPhase phase) {
         return false;
     }
 

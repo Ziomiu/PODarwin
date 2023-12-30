@@ -22,4 +22,9 @@ public class Grass implements WorldElement, Drawable {
     public int getEnergy() {
         return energy;
     }
+
+    @Override
+    public String toString() {
+        return "* " + this.position;
+    }
 }

@@ -4,20 +4,22 @@ import agh.ics.oop.model.classes.Animal;
 import agh.ics.oop.model.classes.Grass;
 import agh.ics.oop.model.world.layers.MapLayer;
 
+import java.util.ArrayList;
+
 public class CleanupPhase implements Phase {
-    private Animal[] removedAnimals;
-    private Grass[] eatenGrass;
+    private ArrayList<Animal> removedAnimals;
+    private ArrayList<Grass> eatenGrass;
 
     @Override
     public void accept(MapLayer layer) {
 
     }
 
-    public Animal[] getRemovedAnimals() {
+    public ArrayList<Animal> getRemovedAnimals() {
         return removedAnimals;
     }
 
-    public Grass[] getEatenGrass() {
+    public ArrayList<Grass> getEatenGrass() {
         return eatenGrass;
     }
 }

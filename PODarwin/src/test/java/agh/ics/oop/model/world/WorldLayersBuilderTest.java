@@ -104,7 +104,7 @@ public class WorldLayersBuilderTest {
             .withBoundary(new Boundary(new Vector2D(0, 0), new Vector2D(10, 10)))
             .withInitialAnimalsEnergy(10)
             .withInitialGrassCount(90)
-            .withTunnels(20);
+            .withTunnels(32);
 
         assertThrows(IllegalStateException.class, builder::build);
     }

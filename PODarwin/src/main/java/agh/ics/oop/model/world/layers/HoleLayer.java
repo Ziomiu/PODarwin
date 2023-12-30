@@ -33,6 +33,12 @@ public class HoleLayer implements MapLayer {
     }
 
     @Override
+    public boolean handle(InitPhase phase) {
+        phase.setHoles(this.holes);
+        return true;
+    }
+
+    @Override
     public boolean handle(MovePhase phase) {
         HashMap<Animal, Vector2D> movesMap = phase.getNewAnimalMoves();
         movesMap.replaceAll((key, value) -> holes.getOrDefault(value, value));
@@ -44,9 +50,9 @@ public class HoleLayer implements MapLayer {
     public boolean handle(GrowGrassPhase phase) {
         HashSet<Vector2D> positions = phase.getBlockedFields();
         positions.addAll(holes.entrySet()
-                .stream()
-                .flatMap(entry -> Stream.of(entry.getKey(), entry.getValue()))
-                .collect(Collectors.toSet()));
+            .stream()
+            .flatMap(entry -> Stream.of(entry.getKey(), entry.getValue()))
+            .collect(Collectors.toSet()));
         return true;
     }
 

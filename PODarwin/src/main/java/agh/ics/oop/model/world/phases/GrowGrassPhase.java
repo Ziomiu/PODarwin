@@ -26,4 +26,8 @@ public class GrowGrassPhase implements Phase {
     public void setMapBoundary(Boundary mapBoundary) {
         this.mapBoundary = mapBoundary;
     }
+
+    public Boundary getMapBoundary() {
+        return mapBoundary;
+    }
 }

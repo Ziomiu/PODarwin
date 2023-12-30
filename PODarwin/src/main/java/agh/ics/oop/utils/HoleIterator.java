@@ -3,10 +3,7 @@ package agh.ics.oop.utils;
 import agh.ics.oop.model.classes.Boundary;
 import agh.ics.oop.model.classes.Vector2D;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class HoleIterator implements Iterator<Vector2D>, Iterable<Vector2D> {
     private final List<Vector2D> allPositions;
@@ -16,8 +13,8 @@ public class HoleIterator implements Iterator<Vector2D>, Iterable<Vector2D> {
     private final int count;
 
     public HoleIterator(Boundary boundary, int count) {
-        this.maxWidth = boundary.width();
-        this.maxHeight = boundary.height();
+        this.maxWidth = boundary.upper().x();
+        this.maxHeight = boundary.upper().y();
         this.count = 2 * count;
         this.allPositions = generateAllPositions();
     }
@@ -49,17 +46,7 @@ public class HoleIterator implements Iterator<Vector2D>, Iterable<Vector2D> {
                 positions.add(new Vector2D(x, y));
             }
         }
-        shuffleList(positions);
+        Collections.shuffle(positions);
         return positions;
-    }
-
-    private void shuffleList(List<Vector2D> list) {
-        Random rand = new Random();
-        for (int i = list.size() - 1; i > 0; i--) {
-            int index = rand.nextInt(i + 1);
-            Vector2D temp = list.get(index);
-            list.set(index, list.get(i));
-            list.set(i, temp);
-        }
     }
 }

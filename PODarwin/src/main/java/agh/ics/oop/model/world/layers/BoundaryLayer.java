@@ -6,7 +6,7 @@ import agh.ics.oop.model.classes.Vector2D;
 import agh.ics.oop.model.enums.Genome;
 import agh.ics.oop.model.world.phases.DisplayPhase;
 import agh.ics.oop.model.world.phases.GrowGrassPhase;
-import agh.ics.oop.model.world.phases.InitAnimalsPhase;
+import agh.ics.oop.model.world.phases.InitPhase;
 import agh.ics.oop.model.world.phases.MovePhase;
 
 public class BoundaryLayer implements MapLayer {
@@ -19,7 +19,7 @@ public class BoundaryLayer implements MapLayer {
     }
 
     @Override
-    public boolean handle(InitAnimalsPhase phase) {
+    public boolean handle(InitPhase phase) {
         phase.setMapBoundary(boundary);
         return true;
     }
@@ -40,9 +40,9 @@ public class BoundaryLayer implements MapLayer {
             }
 
             if (pos.x() > boundary.upper().x()) {
-                moves.put(animal, new Vector2D(boundary.lower().x(), pos.y())) ;
+                moves.put(animal, new Vector2D(boundary.lower().x(), pos.y()));
             } else {
-                moves.put(animal, new Vector2D(boundary.upper().x(), pos.y())) ;
+                moves.put(animal, new Vector2D(boundary.upper().x(), pos.y()));
             }
         }
         return true;

@@ -7,7 +7,7 @@ import agh.ics.oop.model.classes.GenomeSequence;
 import java.util.function.Supplier;
 
 public class AnimalLayer implements MapLayer {
-    private final AnimalFactory  animalFactory;
+    private final AnimalFactory animalFactory;
     private final ReproductionParams reproductionParams;
     private final Supplier<GenomeSequence> genomeSequenceSupplier;
 

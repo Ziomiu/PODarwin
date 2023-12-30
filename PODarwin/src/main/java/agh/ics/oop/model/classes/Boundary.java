@@ -1,13 +1,22 @@
 package agh.ics.oop.model.classes;
 
-public record Boundary(Vector2D lower, Vector2D upper) {
+import java.util.HashSet;
 
+public record Boundary(Vector2D lower, Vector2D upper) {
+    //Returns width in fields
     public int width() {
-        return Math.abs(upper.x() - lower.x());
+        if (lower.x() == upper.x()) {
+            return 1;
+        }
+        return Math.abs(upper.x() - lower.x()) + 1;
     }
 
+    //Returns height in fields
     public int height() {
-        return Math.abs(upper.y() - lower.y());
+        if (upper.y() == lower.y()) {
+            return 1;
+        }
+        return Math.abs(upper.y() - lower.y()) + 1;
     }
 
     public int numberOfFields() {
@@ -24,5 +33,20 @@ public record Boundary(Vector2D lower, Vector2D upper) {
 
     public boolean containsVertical(Vector2D position) {
         return position.y() >= lower.y() && position.y() <= upper.y();
+    }
+
+    public HashSet<Vector2D> generateAllPositions() {
+        HashSet<Vector2D> positions = new HashSet<>();
+        for (int x = lower.x(); x <= upper.x(); x++) {
+            for (int y = lower.y(); y <= upper.y(); y++) {
+                positions.add(new Vector2D(x, y));
+            }
+        }
+        return positions;
+    }
+
+    @Override
+    public String toString() {
+        return lower + " " + upper;
     }
 }
