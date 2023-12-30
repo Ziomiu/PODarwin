@@ -8,12 +8,11 @@ import agh.ics.oop.model.world.phases.CleanupPhase;
 import agh.ics.oop.model.world.phases.EatPhase;
 import agh.ics.oop.model.world.phases.GrowGrassPhase;
 import agh.ics.oop.model.world.phases.InitPhase;
-import agh.ics.oop.utils.GrassIterator;
+import agh.ics.oop.utils.GrassRange;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class GrassLayer implements MapLayer {
     private final GrassFactory grassFactory;
@@ -21,10 +20,10 @@ public class GrassLayer implements MapLayer {
     private final int grassGrownEachPhase;
 
     private final boolean hasEquator;
-    private HashSet<Grass> grasses = new HashSet<>();
-    private HashSet<Grass> equatorGrasses = new HashSet<>();
+    private HashSet<Grass> grass = new HashSet<>();
+    private HashSet<Grass> equatorGrass = new HashSet<>();
     private Boundary equator = null;
-    private double equatorChance = 0.1;
+    private double equatorChance = 0.8;
 
     public GrassLayer(
         GrassFactory grassFactory,
@@ -38,9 +37,9 @@ public class GrassLayer implements MapLayer {
         this.hasEquator = hasEquator;
     }
 
-    private void CreateEquator(Boundary boundary) {
+    private void createEquator(Boundary boundary) {
         if (boundary.height() % 2 == 0) {
-            this.equator = new Boundary(new Vector2D(0, boundary.height() / 2 - boundary.height() / 10),
+            this.equator = new Boundary(new Vector2D(0, (boundary.height() / 2) - 1 - boundary.height() / 10),
                 new Vector2D(boundary.upper().x(), boundary.height() / 2 + boundary.height() / 10));
         } else {
             this.equator = new Boundary(new Vector2D(0, boundary.height() / 2 - boundary.height() / 10),
@@ -48,9 +47,9 @@ public class GrassLayer implements MapLayer {
         }
     }
 
-    private HashSet<Vector2D> getAllGrassesPositions() {
-        var grasses = new ArrayList<>(this.grasses);
-        grasses.addAll(this.equatorGrasses);
+    private HashSet<Vector2D> getAllGrassPositions() {
+        var grasses = new ArrayList<>(this.grass);
+        grasses.addAll(this.equatorGrass);
         List<Vector2D> allGrasses = grasses.stream()
             .map(Grass::getPosition)
             .toList();
@@ -60,144 +59,123 @@ public class GrassLayer implements MapLayer {
     @Override
     public boolean handle(InitPhase phase) {
         if (!this.hasEquator) {
-            GrassIterator grassIterator = new GrassIterator(phase.getMapBoundary(), this.initialGrassPatchesCount, new HashSet<>());
-            for (Vector2D position : grassIterator) {
-                this.grasses.add(grassFactory.getGrassPatch(position));
-            }
-            phase.setGrasses(this.grasses);
-            return true;
-        } else {
-            CreateEquator(phase.getMapBoundary());
-            HashSet<Vector2D> occupied = new HashSet<>(phase.getHoles().keySet());
-            occupied.addAll(this.equator.generateAllPositions());
-            GrassIterator grassIterator = new GrassIterator(phase.getMapBoundary(), (int) Math.ceil(this.initialGrassPatchesCount * (1 - this.equatorChance)), new HashSet<>(occupied));
-            for (Vector2D position : grassIterator) {
-                this.grasses.add(grassFactory.getGrassPatch(position));
-            }
-            GrassIterator grassEquatorIterator = new GrassIterator(this.equator, (int) Math.floor(this.initialGrassPatchesCount * this.equatorChance), new HashSet<>(phase.getHoles().keySet()));
-            for (Vector2D position : grassEquatorIterator) {
-                this.equatorGrasses.add(grassFactory.getGrassPatch(position));
-            }
-            var allGrasses = new HashSet<>(this.grasses);
-            allGrasses.addAll(this.equatorGrasses);
-            phase.setGrasses(allGrasses);
+            phase.setGrasses(this.grass);
+            growGrass(phase.getMapBoundary(), this.initialGrassPatchesCount,
+                0, new HashSet<>(phase.getHoles().keySet()), new HashSet<>(phase.getHoles().keySet()));
+            phase.setGrasses(this.grass);
             return true;
         }
+        createEquator(phase.getMapBoundary());
+        int freeEquatorFields = this.equator.numberOfFields();
+        int freeNotEquatorFields = phase.getMapBoundary().numberOfFields() - this.equator.numberOfFields();
+        var occupied = new HashSet<>(phase.getHoles().keySet());
+        occupied.addAll(this.equator.generateAllPositions());
+        findPlacesToGrowGrass(phase.getMapBoundary(), freeNotEquatorFields, freeEquatorFields, occupied, new HashSet<>(phase.getHoles().keySet()), initialGrassPatchesCount);
+        var allGrasses = new HashSet<>(this.grass);
+        allGrasses.addAll(this.equatorGrass);
+        phase.setGrasses(allGrasses);
+        return true;
     }
 
     @Override
     public boolean handle(EatPhase phase) {
-        var allGrasses = new HashSet<>(this.grasses);
-        allGrasses.addAll(this.equatorGrasses);
+        var allGrasses = new HashSet<>(this.grass);
+        allGrasses.addAll(this.equatorGrass);
         phase.setGrassPositions(allGrasses);
         return true;
     }
 
     @Override
     public boolean handle(CleanupPhase phase) {
-        phase.getEatenGrass().forEach(this.grasses::remove);
-        phase.getEatenGrass().forEach(this.equatorGrasses::remove);
+        phase.getEatenGrass().forEach(this.grass::remove);
+        phase.getEatenGrass().forEach(this.equatorGrass::remove);
         return true;
+    }
+
+    private void growGrass(Boundary boundary, int grassOutsideOfEquator, int grassOnEquator,
+                           HashSet<Vector2D> occupiedOutsideOfEquator, HashSet<Vector2D> occupiedOnEquator) {
+        GrassRange grassRange = new GrassRange(boundary, grassOutsideOfEquator, occupiedOutsideOfEquator);
+        for (Vector2D position : grassRange) {
+            this.grass.add(grassFactory.getGrassPatch(position));
+        }
+        if (this.hasEquator) {
+            GrassRange grassRangeEquator = new GrassRange(this.equator, grassOnEquator, occupiedOnEquator);
+            for (Vector2D position : grassRangeEquator) {
+                this.equatorGrass.add(grassFactory.getGrassPatch(position));
+            }
+        }
+    }
+
+    private void findPlacesToGrowGrass(Boundary boundary, int grassOutsideOfEquator, int grassOnEquator,
+                                       HashSet<Vector2D> occupiedOutsideOfEquator, HashSet<Vector2D> occupiedOnEquator, int amount) {
+        if (grassOutsideOfEquator >= (int) Math.floor(amount * (1 - this.equatorChance))) {
+            //When there is enough place on the equator and outside of it
+            if (grassOnEquator >= (int) Math.floor(amount * this.equatorChance)) {
+                growGrass(boundary, (int) Math.floor(amount * (1 - this.equatorChance)),
+                    (int) Math.floor(amount * this.equatorChance), occupiedOutsideOfEquator, occupiedOnEquator);
+                //When there isn't enough place on the equator, but it is outside of it for grass grown each phase
+            } else {
+                if (grassOutsideOfEquator >= amount + (amount - grassOnEquator)) {
+                    growGrass(boundary, amount + (amount - grassOnEquator),
+                        grassOnEquator, occupiedOutsideOfEquator, occupiedOnEquator);
+                } else {
+                    growGrass(boundary, grassOutsideOfEquator,
+                        grassOnEquator, occupiedOutsideOfEquator, occupiedOnEquator);
+                }
+            }
+            //When there is enough place on the equator for grass grown each phase, but it isn't outside of it
+        } else {
+            if (grassOnEquator >= (int) Math.floor(amount * this.equatorChance)) {
+                if (grassOnEquator >= amount + (amount - grassOnEquator)) {
+                    growGrass(boundary, grassOnEquator, amount + (amount - grassOnEquator),
+                        occupiedOutsideOfEquator, occupiedOnEquator);
+                } else {
+                    growGrass(boundary, grassOutsideOfEquator, grassOnEquator,
+                        occupiedOutsideOfEquator, occupiedOnEquator);
+                }
+                //When there isn't enough place for grass grown each phase on the equator and outside of it
+            } else {
+                growGrass(boundary, grassOutsideOfEquator, grassOnEquator,
+                    occupiedOutsideOfEquator, occupiedOnEquator);
+            }
+        }
     }
 
     @Override
     public boolean handle(GrowGrassPhase phase) {
         var allGrasses = phase.getBlockedFields();
-        allGrasses.addAll(getAllGrassesPositions());
+        allGrasses.addAll(getAllGrassPositions());
         phase.setBlockedFields(allGrasses);
         if (this.hasEquator) {
-            int freeEquatorFields = this.equator.numberOfFields() - this.equatorGrasses.size();
-            int freeNotEquatorFields = phase.getMapBoundary().numberOfFields() - this.grasses.size() - this.equator.numberOfFields();
+            int freeEquatorFields = this.equator.numberOfFields() - this.equatorGrass.size();
+            int freeNotEquatorFields = phase.getMapBoundary().numberOfFields() - this.grass.size() - this.equator.numberOfFields();
             var occupied = new HashSet<>(phase.getBlockedFields());
             occupied.addAll(this.equator.generateAllPositions());
-            if (freeNotEquatorFields >= (int) Math.floor(this.grassGrownEachPhase * (1 - this.equatorChance))) {
-                //When there is enough place on the equator and outside of it
-                if (freeEquatorFields >= (int) Math.floor(this.grassGrownEachPhase * this.equatorChance)) {
-                    GrassIterator grassIterator = new GrassIterator(phase.getMapBoundary(), (int) Math.ceil(this.grassGrownEachPhase * (1 - this.equatorChance)), new HashSet<>(occupied));
-                    for (Vector2D position : grassIterator) {
-                        this.grasses.add(grassFactory.getGrassPatch(position));
-                    }
-                    GrassIterator grassEquatorIterator = new GrassIterator(this.equator, (int) Math.floor(this.grassGrownEachPhase * this.equatorChance), phase.getBlockedFields());
-                    for (Vector2D position : grassEquatorIterator) {
-                        this.equatorGrasses.add(grassFactory.getGrassPatch(position));
-                    }
-                    //When there isn't enough place on the equator, but it is outside of it
-                } else {
-                    if (freeNotEquatorFields >= this.grassGrownEachPhase + (this.grassGrownEachPhase - freeEquatorFields)) {
-                        GrassIterator grassIterator = new GrassIterator(phase.getMapBoundary(), (this.grassGrownEachPhase - freeEquatorFields), phase.getBlockedFields());
-                        for (Vector2D position : grassIterator) {
-                            this.grasses.add(grassFactory.getGrassPatch(position));
-                        }
-                    } else {
-                        GrassIterator grassIterator = new GrassIterator(phase.getMapBoundary(), freeNotEquatorFields, phase.getBlockedFields());
-                        for (Vector2D position : grassIterator) {
-                            this.grasses.add(grassFactory.getGrassPatch(position));
-                        }
-                    }
-
-                    GrassIterator grassEquatorIterator = new GrassIterator(this.equator, freeEquatorFields, phase.getBlockedFields());
-                    for (Vector2D position : grassEquatorIterator) {
-                        this.equatorGrasses.add(grassFactory.getGrassPatch(position));
-                    }
-
-                }
-                //When there is enough place on the equator, but it isnt outside of it
-            } else {
-                if (freeEquatorFields >= (int) Math.floor(this.grassGrownEachPhase * this.equatorChance)) {
-                    GrassIterator grassIterator = new GrassIterator(phase.getMapBoundary(), freeNotEquatorFields, new HashSet<>(occupied));
-                    for (Vector2D position : grassIterator) {
-                        this.grasses.add(grassFactory.getGrassPatch(position));
-                    }
-                    if (freeEquatorFields >= this.grassGrownEachPhase + (this.grassGrownEachPhase - freeNotEquatorFields)) {
-                        GrassIterator grassEquatorIterator = new GrassIterator(this.equator, this.grassGrownEachPhase + (this.grassGrownEachPhase - freeNotEquatorFields), phase.getBlockedFields());
-                        for (Vector2D position : grassEquatorIterator) {
-                            this.equatorGrasses.add(grassFactory.getGrassPatch(position));
-                        }
-                    } else {
-                        GrassIterator grassEquatorIterator = new GrassIterator(this.equator, freeEquatorFields, phase.getBlockedFields());
-                        for (Vector2D position : grassEquatorIterator) {
-                            this.equatorGrasses.add(grassFactory.getGrassPatch(position));
-                        }
-                    }
-                    //When there isn't enough place on the equator and outside of it
-                } else {
-                    GrassIterator grassIterator = new GrassIterator(phase.getMapBoundary(), freeNotEquatorFields, new HashSet<>(occupied));
-                    for (Vector2D position : grassIterator) {
-                        this.grasses.add(grassFactory.getGrassPatch(position));
-                    }
-                    GrassIterator grassEquatorIterator = new GrassIterator(this.equator, freeEquatorFields, phase.getBlockedFields());
-                    for (Vector2D position : grassEquatorIterator) {
-                        this.equatorGrasses.add(grassFactory.getGrassPatch(position));
-                    }
-                }
-
-            }
+            findPlacesToGrowGrass(phase.getMapBoundary(), freeNotEquatorFields, freeEquatorFields, occupied, phase.getBlockedFields(), grassGrownEachPhase);
+            return true;
+        }
+        if (phase.getMapBoundary().numberOfFields() - phase.getBlockedFields().size() >= this.grassGrownEachPhase) {
+            growGrass(phase.getMapBoundary(), this.grassGrownEachPhase, 0, phase.getBlockedFields(), phase.getBlockedFields());
         } else {
-            if (phase.getMapBoundary().numberOfFields() - phase.getBlockedFields().size() >= this.grassGrownEachPhase) {
-                GrassIterator grassIterator = new GrassIterator(phase.getMapBoundary(), this.grassGrownEachPhase, phase.getBlockedFields());
-                for (Vector2D position : grassIterator) {
-                    this.grasses.add(grassFactory.getGrassPatch(position));
-                }
-            } else {
-                GrassIterator grassIterator = new GrassIterator(phase.getMapBoundary(), phase.getMapBoundary().numberOfFields() - phase.getBlockedFields().size(), phase.getBlockedFields());
-                for (Vector2D position : grassIterator) {
-                    this.grasses.add(grassFactory.getGrassPatch(position));
-                }
-            }
-
+            growGrass(phase.getMapBoundary(), phase.getMapBoundary().numberOfFields() - phase.getBlockedFields().size(),
+                0, phase.getBlockedFields(), phase.getBlockedFields());
         }
         return true;
     }
 
-    public HashSet<Grass> getGrasses() {
-        return grasses;
+    public HashSet<Grass> getGrass() {
+        return grass;
     }
 
-    public HashSet<Grass> getEquatorGrasses() {
-        return equatorGrasses;
+    public HashSet<Grass> getEquatorGrass() {
+        return equatorGrass;
     }
 
     public Boundary getEquator() {
         return equator;
+    }
+
+    public void setEquatorChance(double equatorChance) {
+        this.equatorChance = equatorChance;
     }
 }

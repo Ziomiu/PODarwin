@@ -13,8 +13,8 @@ public class HoleIterator implements Iterator<Vector2D>, Iterable<Vector2D> {
     private final int count;
 
     public HoleIterator(Boundary boundary, int count) {
-        this.maxWidth = boundary.width();
-        this.maxHeight = boundary.height();
+        this.maxWidth = boundary.upper().x();
+        this.maxHeight = boundary.upper().y();
         this.count = 2 * count;
         this.allPositions = generateAllPositions();
     }
