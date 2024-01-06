@@ -121,14 +121,16 @@ public class WorldLayersBuilder {
         if (initialHoleCount + initialGrassCount > boundary.numberOfFields()) {
             throw new IllegalStateException("Not enough fields to fit objects");
         }
+
         if (boundary.height() < 2 && hasEquator) {
             throw new IllegalStateException("Equator requires minimal height of 2");
         }
 
         GenomeSequenceFactory genomeSequenceFactory = new GenomeSequenceFactory();
+        AnimalFactory animalFactory = new AnimalFactory(initialAnimalEnergy);
         AnimalLayer animalLayer = new AnimalLayer(
-            new AnimalFactory(initialAnimalEnergy),
-            new ReproduceAnimalsService(reproductionParams),
+            animalFactory,
+            new ReproduceAnimalsService(animalFactory, reproductionParams),
             initialAnimalCount,
             () -> this.hasAlternatingGenomes
                 ? genomeSequenceFactory.getRandomAlternatingGenome(genomeLength)

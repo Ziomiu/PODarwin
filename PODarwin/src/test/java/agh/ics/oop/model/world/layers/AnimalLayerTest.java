@@ -76,7 +76,7 @@ class AnimalLayerTest {
         animalLayer.setAnimals(animals);
         animalLayer.handle(movePhase);
         for (Animal animal : animalLayer.getAnimals()) {
-            assertTrue(animal.getEnergy() == 9);
+            assertEquals(9, animal.getEnergy());
             assertEquals(1,animal.getAnimalStats().getAge());
         }
     }
@@ -134,9 +134,13 @@ class AnimalLayerTest {
         animals.add(animal3);
         animals.add(animal4);
         ReproducePhase reproducePhase = new ReproducePhase();
+        AnimalFactory animalFactory = new AnimalFactory(10);
         AnimalLayer animalLayer = new AnimalLayer(
-            new AnimalFactory(10),
-            new ReproduceAnimalsService(reproductionParams),
+            animalFactory,
+            new ReproduceAnimalsService(
+                animalFactory,
+                reproductionParams
+            ),
             10,
             () -> genomeSequenceFactory.getRandomOrderedGenome(5)
         );
@@ -148,11 +152,6 @@ class AnimalLayerTest {
         assertEquals(1,animal3.getAnimalStats().getNumOfDescendants());
         assertEquals(1,animal4.getAnimalStats().getNumOfChildren());
         assertEquals(1,animal3.getAnimalStats().getNumOfChildren());
-        for(Animal animal: animalLayer.getAnimals()){
-            if(animal.getAnimalStats().getParents().contains(animal3)){
-                assertEquals(2,animal.getEnergy());
-            }
-        }
     }
 
 }

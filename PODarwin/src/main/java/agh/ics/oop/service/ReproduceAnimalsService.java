@@ -1,6 +1,7 @@
 package agh.ics.oop.service;
 
 import agh.ics.oop.model.classes.*;
+import agh.ics.oop.model.classes.factory.AnimalFactory;
 import agh.ics.oop.model.enums.Genome;
 import agh.ics.oop.utils.AnimalComparator;
 import agh.ics.oop.utils.NumbersRange;
@@ -8,9 +9,14 @@ import agh.ics.oop.utils.NumbersRange;
 import java.util.*;
 
 public class ReproduceAnimalsService {
-    private ReproductionParams reproductionParams;
+    private final ReproductionParams reproductionParams;
+    private final AnimalFactory animalFactory;
 
-    public ReproduceAnimalsService(ReproductionParams reproductionParams) {
+    public ReproduceAnimalsService(
+        AnimalFactory animalFactory,
+        ReproductionParams reproductionParams
+    ) {
+        this.animalFactory = animalFactory;
         this.reproductionParams = reproductionParams;
     }
 
@@ -30,7 +36,7 @@ public class ReproduceAnimalsService {
         AnimalComparator animalComparator = new AnimalComparator();
         for (Vector2D position : groupedAnimals.keySet()) {
             if (groupedAnimals.get(position).size() >= 2) {
-                Collections.sort(groupedAnimals.get(position), animalComparator);
+                groupedAnimals.get(position).sort(animalComparator);
                 addChild(animals, groupedAnimals.get(position).get(groupedAnimals.get(position).size() - 1),
                     groupedAnimals.get(position).get(groupedAnimals.get(position).size() - 2));
             }
@@ -48,7 +54,7 @@ public class ReproduceAnimalsService {
         parent1.removeEnergy(reproductionParams.reproductionEnergyRequired());
         parent2.removeEnergy(reproductionParams.reproductionEnergyRequired());
         List<Genome> newGenome = new ArrayList<>();
-        //Animal gets left part of genes from bigger parent
+        // Animal gets left part of genes from bigger parent
         if (genesPart == 1) {
             for (int i = 0; i < numOfGenesFromBiggerParent; i++) {
                 newGenome.add(parent1.getGenes().get(i));
@@ -57,7 +63,7 @@ public class ReproduceAnimalsService {
                 newGenome.add(parent2.getGenes().get(i));
             }
         } else {
-            ////Animal gets left part of genes from smaller parent
+            // Animal gets left part of genes from smaller parent
             for (int i = 0; i < numOfGensFromSmallerParent; i++) {
                 newGenome.add(parent1.getGenes().get(i));
             }
@@ -66,20 +72,14 @@ public class ReproduceAnimalsService {
             }
         }
         mutate(newGenome);
-        Animal child;
-        if (isGenomeOrdered) {
-            child = new Animal(parent1.getPosition(), new OrderedGenomeSequence(newGenome),
-                2 * this.reproductionParams.reproductionEnergyRequired());
-
-        } else {
-            child = new Animal(parent1.getPosition(), new AlternatingGenomeSequence(newGenome),
-                2 * this.reproductionParams.reproductionEnergyRequired());
-        }
+        Animal child = animalFactory.getAnimal(
+            parent1.getPosition(),
+            isGenomeOrdered ? new OrderedGenomeSequence(newGenome) : new AlternatingGenomeSequence(newGenome),
+            2 * reproductionParams.reproductionEnergyRequired(),
+            parent1,
+            parent2
+        );
         animals.add(child);
-        child.getAnimalStats().getParents().add(parent1);
-        child.getAnimalStats().getParents().add(parent2);
-        parent1.getAnimalStats().addDescendant();
-        parent2.getAnimalStats().addDescendant();
     }
 
     private void mutate(List<Genome> newGenome) {

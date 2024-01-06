@@ -6,7 +6,6 @@ import agh.ics.oop.model.classes.Vector2D;
 import agh.ics.oop.utils.AnimalComparator;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -17,9 +16,15 @@ public class FeedAnimalService {
         AnimalComparator animalComparator = new AnimalComparator();
         for (Vector2D position : groupedAnimals.keySet()) {
             if (grassPositions.containsKey(position)) {
-                Collections.sort(groupedAnimals.get(position), animalComparator);
-                groupedAnimals.get(position).get(groupedAnimals.get(position).size() - 1).addEnergy(grassPositions.get(position).getEnergy());
-                groupedAnimals.get(position).get(groupedAnimals.get(position).size() - 1).getAnimalStats().increasePlantsConsumed();
+                groupedAnimals.get(position).sort(animalComparator);
+                groupedAnimals
+                    .get(position)
+                    .get(groupedAnimals.get(position).size() - 1)
+                    .addEnergy(grassPositions.get(position).getEnergy());
+                groupedAnimals
+                    .get(position)
+                    .get(groupedAnimals.get(position).size() - 1)
+                    .getAnimalStats().increasePlantsConsumed();
                 removedGrass.add(grassPositions.get(position));
             }
         }

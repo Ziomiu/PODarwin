@@ -11,6 +11,7 @@ public class MovePhase implements Phase {
 
     @Override
     public void accept(MapLayer layer) {
+        layer.handle(this);
     }
 
     public HashMap<Animal, Vector2D> getNewAnimalMoves() {

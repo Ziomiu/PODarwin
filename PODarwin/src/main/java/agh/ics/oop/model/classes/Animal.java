@@ -1,17 +1,24 @@
 package agh.ics.oop.model.classes;
 
 import agh.ics.oop.model.enums.Genome;
+import agh.ics.oop.utils.Pair;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 public class Animal implements WorldElement, Drawable {
     private Vector2D position;
     private int energy;
     private final GenomeSequence genomeSequence;
     private Genome currentGenome;
-    private AnimalStats animalStats = new AnimalStats();
+    private Pair<Animal> parents;
+    private final HashSet<Animal> descendants;
+    private final AnimalStats animalStats = new AnimalStats();
+    private final UUID fingerprint;
 
-    public Animal(Vector2D initialPosition, GenomeSequence genomeSequence, int energy) {
+    public Animal(Vector2D initialPosition, GenomeSequence genomeSequence, Animal parent1, Animal parent2, int energy) {
         this.position = initialPosition;
         this.genomeSequence = genomeSequence;
         if (energy <= 0) {
@@ -19,6 +26,18 @@ public class Animal implements WorldElement, Drawable {
         }
         this.energy = energy;
         this.currentGenome = genomeSequence.nextInSequence();
+        fingerprint = UUID.randomUUID();
+        descendants = new HashSet<>();
+        if (parent1 != null && parent2 != null) {
+            this.parents = new Pair<>(parent1, parent2);
+            this.parents.first().animalStats.increaseChildren();
+            this.parents.second().animalStats.increaseChildren();
+            updateParentsDescendants(this);
+        }
+    }
+
+    public Animal(Vector2D initialPosition, GenomeSequence genomeSequence, int energy) {
+        this(initialPosition, genomeSequence, null, null, energy);
     }
 
     @Override
@@ -81,5 +100,42 @@ public class Animal implements WorldElement, Drawable {
 
     public GenomeSequence getGenomeSequence() {
         return genomeSequence;
+    }
+
+    public boolean isDead() {
+        return animalStats.getDeathDay() != 0;
+    }
+
+    private void updateParentsDescendants(Animal newAnimal) {
+        if (parents == null) {
+            return;
+        }
+
+        for (Animal parent : parents.getAsList()) {
+            if (parent.descendants.contains(newAnimal) || parent.isDead()) {
+                continue;
+            }
+
+            parent.descendants.add(newAnimal);
+            parent.animalStats.increaseDescendants();
+            parent.updateParentsDescendants(newAnimal);
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Animal animal = (Animal) o;
+        return Objects.equals(fingerprint, animal.fingerprint);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fingerprint);
     }
 }
