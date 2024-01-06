@@ -17,6 +17,7 @@ public class WorldLayersBuilder {
     private int initialAnimalEnergy = 0;
     private int energyOfGrass = 0;
     private int genomeLength = 10;
+    private int initialAnimalCount = 0;
     private ReproductionParams reproductionParams = null;
 
     public WorldLayersBuilder withBoundary(Boundary boundary) {
@@ -95,6 +96,14 @@ public class WorldLayersBuilder {
         return this;
     }
 
+    public WorldLayersBuilder withInitialAnimalCount(int initialAnimalCount) {
+        if (initialAnimalCount < 0) {
+            throw new IllegalArgumentException("Animal count must be equal or greater than 0");
+        }
+        this.initialAnimalCount = initialAnimalCount;
+        return this;
+    }
+
     public MapLayer build() throws IllegalStateException {
         if (reproductionParams == null) {
             throw new IllegalStateException("Reproduction parameters are required");
@@ -119,6 +128,7 @@ public class WorldLayersBuilder {
         AnimalLayer animalLayer = new AnimalLayer(
             new AnimalFactory(initialAnimalEnergy),
             reproductionParams,
+            initialAnimalCount,
             () -> this.hasAlternatingGenomes
                 ? genomeSequenceFactory.getRandomAlternatingGenome(genomeLength)
                 : genomeSequenceFactory.getRandomOrderedGenome(genomeLength)

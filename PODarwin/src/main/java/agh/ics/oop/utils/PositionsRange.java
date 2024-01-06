@@ -5,7 +5,7 @@ import agh.ics.oop.model.classes.Vector2D;
 
 import java.util.*;
 
-public class GrassRange implements Iterable<Vector2D> {
+public class PositionsRange implements Iterable<Vector2D> {
     private final int max_x;
     private final int max_y;
     private final int min_x;
@@ -13,7 +13,7 @@ public class GrassRange implements Iterable<Vector2D> {
     private final int count;
     private HashSet<Vector2D> occupied;
 
-    public GrassRange(Boundary boundary, int count) {
+    public PositionsRange(Boundary boundary, int count) {
         this.max_x = boundary.upper().x();
         this.max_y = boundary.upper().y();
         this.min_x = boundary.lower().x();
@@ -21,7 +21,7 @@ public class GrassRange implements Iterable<Vector2D> {
         this.count = count;
     }
 
-    public GrassRange(Boundary boundary, int count, HashSet<Vector2D> occupied) {
+    public PositionsRange(Boundary boundary, int count, HashSet<Vector2D> occupied) {
         this(boundary, count);
         this.occupied = occupied;
     }
@@ -41,6 +41,6 @@ public class GrassRange implements Iterable<Vector2D> {
 
     @Override
     public Iterator<Vector2D> iterator() {
-        return new GrassIterator(generateAllPositions());
+        return new PositionIterator(generateAllPositions());
     }
 }

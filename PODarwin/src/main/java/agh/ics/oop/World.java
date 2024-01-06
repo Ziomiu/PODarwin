@@ -1,10 +1,15 @@
 package agh.ics.oop;
 
-import agh.ics.oop.model.classes.Boundary;
-import agh.ics.oop.model.classes.ReproductionParams;
-import agh.ics.oop.model.classes.Vector2D;
+import agh.ics.oop.model.classes.*;
+import agh.ics.oop.model.classes.factory.GenomeSequenceFactory;
+import agh.ics.oop.model.enums.Genome;
 import agh.ics.oop.model.world.WorldLayersBuilder;
 import agh.ics.oop.model.world.layers.MapLayer;
+import agh.ics.oop.utils.NumbersRange;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class World {
     public static void main(String[] args) {
@@ -21,6 +26,7 @@ public class World {
             .withInitialGrassCount(1000)
             .withGrassGrownEachIteration(10)
             .withEnergyOfGrass(10)
+            .withInitialAnimalCount(10)
             .withInitialAnimalsEnergy(100)
             .withReproductionParams(new ReproductionParams(
                 50,
@@ -28,7 +34,6 @@ public class World {
                 1,
                 5
             ));
-
         MapLayer firstLayer = builder.build();
     }
 }
