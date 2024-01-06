@@ -5,6 +5,7 @@ import agh.ics.oop.model.classes.factory.AnimalFactory;
 import agh.ics.oop.model.classes.factory.GenomeSequenceFactory;
 import agh.ics.oop.model.classes.factory.GrassFactory;
 import agh.ics.oop.model.world.layers.*;
+import agh.ics.oop.service.ReproduceAnimalsService;
 
 public class WorldLayersBuilder {
     private boolean hasAlternatingGenomes = false;
@@ -127,7 +128,7 @@ public class WorldLayersBuilder {
         GenomeSequenceFactory genomeSequenceFactory = new GenomeSequenceFactory();
         AnimalLayer animalLayer = new AnimalLayer(
             new AnimalFactory(initialAnimalEnergy),
-            reproductionParams,
+            new ReproduceAnimalsService(reproductionParams),
             initialAnimalCount,
             () -> this.hasAlternatingGenomes
                 ? genomeSequenceFactory.getRandomAlternatingGenome(genomeLength)

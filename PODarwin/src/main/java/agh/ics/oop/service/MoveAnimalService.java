@@ -1,4 +1,4 @@
-package agh.ics.oop.utils;
+package agh.ics.oop.service;
 
 import agh.ics.oop.model.classes.Animal;
 import agh.ics.oop.model.classes.Vector2D;
@@ -7,17 +7,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class MoveAnimalService {
-    private final HashSet<Animal> animals;
-    private final HashMap<Animal, Vector2D> moves;
-
-    public MoveAnimalService(HashSet<Animal> animals, HashMap<Animal, Vector2D> moves) {
-        this.animals = animals;
-        this.moves = moves;
-    }
-
-    public HashMap<Animal, Vector2D> moveAnimals() {
+    public static HashMap<Animal, Vector2D> moveAnimals(HashSet<Animal> animals, HashMap<Animal, Vector2D> moves) {
         HashMap<Animal, Vector2D> animalMoves = new HashMap<>();
-        for (Animal animal : this.animals) {
+        for (Animal animal : animals) {
             animal.setPosition(moves.get(animal));
             animal.removeEnergy(1);
             animal.getAnimalStats().increaseAge();

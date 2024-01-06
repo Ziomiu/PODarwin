@@ -4,7 +4,7 @@ import agh.ics.oop.model.classes.Vector2D;
 
 import java.util.*;
 
-public class PositionIterator implements Iterator {
+public class PositionIterator implements Iterator<Vector2D> {
     private final List<Vector2D> availablePositions;
     private int currentIndex = 0;
 

@@ -1,20 +1,20 @@
-package agh.ics.oop.utils;
+package agh.ics.oop.service;
 
 import agh.ics.oop.model.classes.*;
 import agh.ics.oop.model.enums.Genome;
+import agh.ics.oop.utils.AnimalComparator;
+import agh.ics.oop.utils.NumbersRange;
 
 import java.util.*;
 
-public class ReproduceAnimalService {
-    private HashSet<Animal> animals;
+public class ReproduceAnimalsService {
     private ReproductionParams reproductionParams;
 
-    public ReproduceAnimalService(HashSet<Animal> animals, ReproductionParams reproductionParams) {
-        this.animals = animals;
+    public ReproduceAnimalsService(ReproductionParams reproductionParams) {
         this.reproductionParams = reproductionParams;
     }
 
-    private HashMap<Vector2D, ArrayList<Animal>> groupAnimalsReproduce() {
+    private HashMap<Vector2D, ArrayList<Animal>> groupAnimalsReproduce(HashSet<Animal> animals) {
         HashMap<Vector2D, ArrayList<Animal>> groupedAnimals = new HashMap<>();
         for (Animal animal : animals) {
             if (animal.getEnergy() >= reproductionParams.reproductionEnergyThreshold()) {
@@ -25,19 +25,19 @@ public class ReproduceAnimalService {
         return groupedAnimals;
     }
 
-    public void reproduceAnimals() {
-        HashMap<Vector2D, ArrayList<Animal>> groupedAnimals = groupAnimalsReproduce();
+    public void reproduceAnimals(HashSet<Animal> animals) {
+        HashMap<Vector2D, ArrayList<Animal>> groupedAnimals = groupAnimalsReproduce(animals);
         AnimalComparator animalComparator = new AnimalComparator();
         for (Vector2D position : groupedAnimals.keySet()) {
             if (groupedAnimals.get(position).size() >= 2) {
                 Collections.sort(groupedAnimals.get(position), animalComparator);
-                addChild(groupedAnimals.get(position).get(groupedAnimals.get(position).size() - 1),
+                addChild(animals, groupedAnimals.get(position).get(groupedAnimals.get(position).size() - 1),
                     groupedAnimals.get(position).get(groupedAnimals.get(position).size() - 2));
             }
         }
     }
 
-    private void addChild(Animal parent1, Animal parent2) {
+    private void addChild(HashSet<Animal> animals, Animal parent1, Animal parent2) {
         Random random = new Random();
         boolean isGenomeOrdered = parent1.getGenomeSequence() instanceof OrderedGenomeSequence;
         int genesPart = random.nextInt(2);
@@ -75,7 +75,7 @@ public class ReproduceAnimalService {
             child = new Animal(parent1.getPosition(), new AlternatingGenomeSequence(newGenome),
                 2 * this.reproductionParams.reproductionEnergyRequired());
         }
-        this.animals.add(child);
+        animals.add(child);
         child.getAnimalStats().getParents().add(parent1);
         child.getAnimalStats().getParents().add(parent2);
         parent1.getAnimalStats().addDescendant();
