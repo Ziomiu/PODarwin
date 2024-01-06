@@ -27,6 +27,12 @@ public class WorldLayersBuilderTest {
     }
 
     @Test
+    public void shouldThrowOnInvalidAnimalCount() {
+        WorldLayersBuilder builder = new WorldLayersBuilder();
+        assertThrows(IllegalArgumentException.class, () -> builder.withInitialAnimalCount(-1));
+    }
+
+    @Test
     public void shouldThrowOnInvalidInitialAnimalEnergy() {
         WorldLayersBuilder builder = new WorldLayersBuilder();
         assertThrows(IllegalArgumentException.class, () -> builder.withInitialAnimalsEnergy(-1));

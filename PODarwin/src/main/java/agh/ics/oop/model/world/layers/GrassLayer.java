@@ -8,7 +8,7 @@ import agh.ics.oop.model.world.phases.CleanupPhase;
 import agh.ics.oop.model.world.phases.EatPhase;
 import agh.ics.oop.model.world.phases.GrowGrassPhase;
 import agh.ics.oop.model.world.phases.InitPhase;
-import agh.ics.oop.utils.GrassRange;
+import agh.ics.oop.utils.PositionsRange;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -81,7 +81,7 @@ public class GrassLayer implements MapLayer {
     public boolean handle(EatPhase phase) {
         var allGrasses = new HashSet<>(this.grass);
         allGrasses.addAll(this.equatorGrass);
-        phase.setGrassPositions(allGrasses);
+        phase.setGrass(allGrasses);
         return true;
     }
 
@@ -94,13 +94,13 @@ public class GrassLayer implements MapLayer {
 
     private void growGrass(Boundary boundary, int grassOutsideOfEquator, int grassOnEquator,
                            HashSet<Vector2D> occupiedOutsideOfEquator, HashSet<Vector2D> occupiedOnEquator) {
-        GrassRange grassRange = new GrassRange(boundary, grassOutsideOfEquator, occupiedOutsideOfEquator);
-        for (Vector2D position : grassRange) {
+        PositionsRange positionsRange = new PositionsRange(boundary, grassOutsideOfEquator, occupiedOutsideOfEquator);
+        for (Vector2D position : positionsRange) {
             this.grass.add(grassFactory.getGrassPatch(position));
         }
         if (this.hasEquator) {
-            GrassRange grassRangeEquator = new GrassRange(this.equator, grassOnEquator, occupiedOnEquator);
-            for (Vector2D position : grassRangeEquator) {
+            PositionsRange positionsRangeEquator = new PositionsRange(this.equator, grassOnEquator, occupiedOnEquator);
+            for (Vector2D position : positionsRangeEquator) {
                 this.equatorGrass.add(grassFactory.getGrassPatch(position));
             }
         }
