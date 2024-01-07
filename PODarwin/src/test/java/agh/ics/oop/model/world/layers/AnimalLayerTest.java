@@ -7,12 +7,11 @@ import agh.ics.oop.model.world.phases.EatPhase;
 import agh.ics.oop.model.world.phases.InitPhase;
 import agh.ics.oop.model.world.phases.MovePhase;
 import agh.ics.oop.model.world.phases.ReproducePhase;
-import agh.ics.oop.utils.PositionsRange;
+import agh.ics.oop.service.ReproduceAnimalsService;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -20,7 +19,6 @@ import static org.mockito.Mockito.*;
 class AnimalLayerTest {
     @Test
     void shouldNotSpawnOnHoles() {
-        var reproductive = mock(ReproductionParams.class);
         HashMap<Vector2D, Vector2D> holes = new HashMap<>();
         Vector2D v1 = new Vector2D(2, 3);
         Vector2D v2 = new Vector2D(4, 5);
@@ -33,7 +31,7 @@ class AnimalLayerTest {
         GenomeSequenceFactory genomeSequenceFactory = new GenomeSequenceFactory();
         AnimalLayer animalLayer = new AnimalLayer(
             new AnimalFactory(10),
-            reproductive,
+            mock(ReproduceAnimalsService.class),
             10,
             () -> genomeSequenceFactory.getRandomOrderedGenome(5)
         );
@@ -48,7 +46,6 @@ class AnimalLayerTest {
 
     @Test
     void shouldChangeEnergy() {
-        var reproductive = mock(ReproductionParams.class);
         GenomeSequenceFactory genomeSequenceFactory = new GenomeSequenceFactory();
         HashMap<Animal, Vector2D> animalMoves = new HashMap<>();
         HashSet<Animal> animals = new HashSet<>();
@@ -72,33 +69,31 @@ class AnimalLayerTest {
         movePhase.setNewAnimalMoves(animalMoves);
         AnimalLayer animalLayer = new AnimalLayer(
             new AnimalFactory(10),
-            reproductive,
+            mock(ReproduceAnimalsService.class),
             10,
             () -> genomeSequenceFactory.getRandomOrderedGenome(5)
         );
         animalLayer.setAnimals(animals);
         animalLayer.handle(movePhase);
         for (Animal animal : animalLayer.getAnimals()) {
-            assertTrue(animal.getEnergy() == 9);
+            assertEquals(9, animal.getEnergy());
             assertEquals(1,animal.getAnimalStats().getAge());
         }
     }
 
     @Test
     void shouldAddEnergy() {
-        var reproductive = mock(ReproductionParams.class);
         GenomeSequenceFactory genomeSequenceFactory = new GenomeSequenceFactory();
         HashSet<Animal> animals = new HashSet<>();
         HashSet<Grass> grass = new HashSet<>();
         Vector2D v1 = new Vector2D(2, 3);
         Vector2D v2 = new Vector2D(4, 5);
         Vector2D v3 = new Vector2D(5, 6);
-        Vector2D v4 = new Vector2D(5, 6);
         Grass g1 = new Grass(v3, 5);
         Animal animal1 = new Animal(v1, genomeSequenceFactory.getRandomOrderedGenome(5), 10);
         Animal animal2 = new Animal(v2, genomeSequenceFactory.getRandomOrderedGenome(5), 10);
         Animal animal3 = new Animal(v3, genomeSequenceFactory.getRandomOrderedGenome(5), 10);
-        Animal animal4 = new Animal(v4, genomeSequenceFactory.getRandomOrderedGenome(5), 12);
+        Animal animal4 = new Animal(v3, genomeSequenceFactory.getRandomOrderedGenome(5), 12);
         animals.add(animal1);
         animals.add(animal2);
         animals.add(animal3);
@@ -108,8 +103,8 @@ class AnimalLayerTest {
         eatPhase.setGrass(grass);
         AnimalLayer animalLayer = new AnimalLayer(
             new AnimalFactory(10),
-            reproductive,
-            10,
+            mock(ReproduceAnimalsService.class),
+            0,
             () -> genomeSequenceFactory.getRandomOrderedGenome(5)
         );
         animalLayer.setAnimals(animals);
@@ -139,9 +134,13 @@ class AnimalLayerTest {
         animals.add(animal3);
         animals.add(animal4);
         ReproducePhase reproducePhase = new ReproducePhase();
+        AnimalFactory animalFactory = new AnimalFactory(10);
         AnimalLayer animalLayer = new AnimalLayer(
-            new AnimalFactory(10),
-            reproductionParams,
+            animalFactory,
+            new ReproduceAnimalsService(
+                animalFactory,
+                reproductionParams
+            ),
             10,
             () -> genomeSequenceFactory.getRandomOrderedGenome(5)
         );
@@ -153,11 +152,6 @@ class AnimalLayerTest {
         assertEquals(1,animal3.getAnimalStats().getNumOfDescendants());
         assertEquals(1,animal4.getAnimalStats().getNumOfChildren());
         assertEquals(1,animal3.getAnimalStats().getNumOfChildren());
-        for(Animal animal: animalLayer.getAnimals()){
-            if(animal.getAnimalStats().getParents().contains(animal3)){
-                assertEquals(2,animal.getEnergy());
-            }
-        }
     }
 
 }

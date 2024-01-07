@@ -14,7 +14,7 @@ public class DisplayPhase implements Phase {
 
     @Override
     public void accept(MapLayer layer) {
-
+        layer.handle(this);
     }
 
     public MapChangeSubscriber getMapChangeSubscriber() {

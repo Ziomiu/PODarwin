@@ -5,6 +5,7 @@ import agh.ics.oop.model.classes.factory.AnimalFactory;
 import agh.ics.oop.model.classes.factory.GenomeSequenceFactory;
 import agh.ics.oop.model.classes.factory.GrassFactory;
 import agh.ics.oop.model.world.layers.*;
+import agh.ics.oop.service.ReproduceAnimalsService;
 
 public class WorldLayersBuilder {
     private boolean hasAlternatingGenomes = false;
@@ -120,14 +121,16 @@ public class WorldLayersBuilder {
         if (initialHoleCount + initialGrassCount > boundary.numberOfFields()) {
             throw new IllegalStateException("Not enough fields to fit objects");
         }
+
         if (boundary.height() < 2 && hasEquator) {
             throw new IllegalStateException("Equator requires minimal height of 2");
         }
 
         GenomeSequenceFactory genomeSequenceFactory = new GenomeSequenceFactory();
+        AnimalFactory animalFactory = new AnimalFactory(initialAnimalEnergy);
         AnimalLayer animalLayer = new AnimalLayer(
-            new AnimalFactory(initialAnimalEnergy),
-            reproductionParams,
+            animalFactory,
+            new ReproduceAnimalsService(animalFactory, reproductionParams),
             initialAnimalCount,
             () -> this.hasAlternatingGenomes
                 ? genomeSequenceFactory.getRandomAlternatingGenome(genomeLength)

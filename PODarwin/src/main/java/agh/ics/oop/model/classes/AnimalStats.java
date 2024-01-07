@@ -1,11 +1,7 @@
 package agh.ics.oop.model.classes;
 
-import java.util.HashMap;
-import java.util.HashSet;
-
 public class AnimalStats {
     private int plantsConsumed = 0;
-    private HashSet<Animal> parents = new HashSet<>();
     private int numOfChildren = 0;
     private int numOfDescendants = 0;
     private int age = 0;
@@ -15,31 +11,23 @@ public class AnimalStats {
     }
 
     public void increasePlantsConsumed() {
-        this.plantsConsumed += 1;
+        plantsConsumed++;
+    }
+
+    public void increaseChildren() {
+        numOfChildren++;
+    }
+
+    public void increaseDescendants() {
+        numOfDescendants++;
     }
 
     public void increaseAge() {
-        this.age += 1;
-    }
-
-    public void addDescendant() {
-        this.numOfChildren += 1;
-        this.numOfDescendants += 1;
-        if (!parents.isEmpty()) {
-            for (Animal animal : this.parents) {
-                if (animal.getAnimalStats().deathDay != 0) {
-                    animal.getAnimalStats().addDescendant();
-                }
-            }
-        }
+        age++;
     }
 
     public int getPlantsConsumed() {
         return plantsConsumed;
-    }
-
-    public HashSet<Animal> getParents() {
-        return parents;
     }
 
     public int getNumOfChildren() {
@@ -57,5 +45,8 @@ public class AnimalStats {
     public int getDeathDay() {
         return deathDay;
     }
-    //Add setting deathDay when Simulation is ready
+
+    public void setDead(int daySinceSimulationStarted) {
+        deathDay = daySinceSimulationStarted;
+    }
 }

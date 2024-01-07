@@ -24,6 +24,27 @@ public class AnimalTest {
     }
 
     @Test
+    void shouldCreateAnimalsWithCorrectDescendantsCount() {
+        Animal a1 = new Animal(mock(Vector2D.class), mock(GenomeSequence.class), 10);
+        Animal a2 = new Animal(mock(Vector2D.class), mock(GenomeSequence.class), 10);
+        Animal a3 = new Animal(mock(Vector2D.class), mock(GenomeSequence.class), a1, a2, 10);
+        Animal a4 = new Animal(mock(Vector2D.class), mock(GenomeSequence.class), a1, a2, 10);
+        Animal a5 = new Animal(mock(Vector2D.class), mock(GenomeSequence.class), a3, a4, 10);
+
+        assertEquals(2, a1.getAnimalStats().getNumOfChildren());
+        assertEquals(2, a2.getAnimalStats().getNumOfChildren());
+        assertEquals(1, a3.getAnimalStats().getNumOfChildren());
+        assertEquals(1, a4.getAnimalStats().getNumOfChildren());
+        assertEquals(0, a5.getAnimalStats().getNumOfChildren());
+
+        assertEquals(3, a1.getAnimalStats().getNumOfDescendants());
+        assertEquals(3, a2.getAnimalStats().getNumOfDescendants());
+        assertEquals(1, a3.getAnimalStats().getNumOfDescendants());
+        assertEquals(1, a4.getAnimalStats().getNumOfDescendants());
+        assertEquals(0, a5.getAnimalStats().getNumOfDescendants());
+    }
+
+    @Test
     public void shouldDisallowCreatingAnimalWithZeroEnergy() {
         assertThrows(
             IllegalStateException.class,

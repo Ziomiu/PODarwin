@@ -15,11 +15,13 @@ public class EatPhase implements Phase {
     }
 
     public HashMap<Vector2D, Grass> getGrassPosition() {
-        HashMap<Vector2D, Grass> grassPositions = new HashMap<>(this.grass.stream()
-            .collect(HashMap::new,
-                (map, grass) -> map.put(grass.getPosition(), grass),
-                HashMap::putAll));
-        return grassPositions;
+        return new HashMap<>(
+            this.grass.stream().collect(
+                HashMap::new,
+                (map, grass1) -> map.put(grass1.getPosition(), grass1),
+                HashMap::putAll
+            )
+        );
     }
 
     public void setGrass(HashSet<Grass> grass) {
@@ -28,6 +30,6 @@ public class EatPhase implements Phase {
 
     @Override
     public void accept(MapLayer layer) {
-
+        layer.handle(this);
     }
 }
