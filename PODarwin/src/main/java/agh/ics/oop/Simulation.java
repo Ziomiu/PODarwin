@@ -54,7 +54,7 @@ public class Simulation {
     private void bootstrapSimulation() {
         InitPhase initPhase = new InitPhase();
         visitLayers(initPhase);
-        initPhase.getAnimals().forEach(a -> animalMoves.put(a, a.getPosition()));
+        initPhase.getAnimals().forEach(a -> animalMoves.put(a, a.getPosition().add(a.getCurrentGenome().toUnitVector())));
         initPhase.getHoles().forEach((hIn, hOut) -> {
             permanentlyBlockedFields.add(hIn);
             permanentlyBlockedFields.add(hOut);

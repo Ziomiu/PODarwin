@@ -18,6 +18,7 @@ public class AnimalLayer extends AbstractLayer {
     private final int initialAnimalsCount;
     private HashSet<Grass> eatenGrass;
     private HashSet<Animal> animals;
+    private HashMap<Animal, Vector2D> newbornMoves = new HashMap<>();
 
     public AnimalLayer(
         AnimalFactory animalFactory,
@@ -48,7 +49,9 @@ public class AnimalLayer extends AbstractLayer {
 
     @Override
     public void handle(MovePhase phase) {
-        phase.setNewAnimalMoves(MoveAnimalService.moveAnimals(animals, phase.getNewAnimalMoves()));
+        HashMap<Animal, Vector2D> tempMoves = phase.getNewAnimalMoves();
+        tempMoves.putAll(newbornMoves);
+        phase.setNewAnimalMoves(MoveAnimalService.moveAnimals(animals, tempMoves));
     }
 
 
@@ -62,12 +65,21 @@ public class AnimalLayer extends AbstractLayer {
 
     @Override
     public void handle(ReproducePhase phase) {
-        reproduceAnimalsService.reproduceAnimals(animals);
+        newbornMoves.clear();
+        newbornMoves.putAll(reproduceAnimalsService.reproduceAnimals(animals));
     }
 
     @Override
     public void handle(CleanupPhase phase) {
-        phase.getRemovedAnimals().forEach(animals::remove);
+        ArrayList<Animal> removedAnimals = new ArrayList<>();
+        for (Animal animal : animals) {
+            if (animal.getEnergy() == 0) {
+                removedAnimals.add(animal);
+                System.out.println("Animal died on position " + animal.getPosition());
+            }
+        }
+        animals.removeAll(removedAnimals);
+        phase.setRemovedAnimals(removedAnimals);
         phase.setEatenGrass(eatenGrass);
     }
 

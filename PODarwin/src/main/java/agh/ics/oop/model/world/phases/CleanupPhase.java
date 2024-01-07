@@ -14,13 +14,16 @@ public class CleanupPhase implements Phase {
 
     @Override
     public void accept(MapLayer layer) {
-        System.out.println("CLEANUP");
         layer.handle(this);
     }
 
     // todo: add setter and use it somewhere?
     public ArrayList<Animal> getRemovedAnimals() {
         return removedAnimals;
+    }
+
+    public void setRemovedAnimals(ArrayList<Animal> removedAnimals) {
+        this.removedAnimals = removedAnimals;
     }
 
     public HashSet<Grass> getEatenGrass() {

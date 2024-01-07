@@ -14,7 +14,6 @@ public class GrowGrassPhase implements Phase {
 
     @Override
     public void accept(MapLayer layer) {
-        System.out.println("GROW GRASS");
         layer.handle(this);
     }
 

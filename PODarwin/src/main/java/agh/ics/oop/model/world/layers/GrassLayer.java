@@ -150,7 +150,6 @@ public class GrassLayer extends AbstractLayer {
             findPlacesToGrowGrass(phase.getMapBoundary(), freeNotEquatorFields, freeEquatorFields, occupied, phase.getBlockedFields(), grassGrownEachPhase);
             return;
         }
-
         if (phase.getMapBoundary().numberOfFields() - phase.getBlockedFields().size() >= this.grassGrownEachPhase) {
             growGrass(phase.getMapBoundary(), this.grassGrownEachPhase, 0, phase.getBlockedFields(), phase.getBlockedFields());
             return;
