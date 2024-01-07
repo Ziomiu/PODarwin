@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class HoleLayer implements MapLayer {
+public class HoleLayer extends AbstractLayer {
 
     private HashMap<Vector2D, Vector2D> holes;
 
@@ -33,27 +33,24 @@ public class HoleLayer implements MapLayer {
     }
 
     @Override
-    public boolean handle(InitPhase phase) {
+    public void handle(InitPhase phase) {
         phase.setHoles(this.holes);
-        return true;
     }
 
     @Override
-    public boolean handle(MovePhase phase) {
+    public void handle(MovePhase phase) {
         HashMap<Animal, Vector2D> movesMap = phase.getNewAnimalMoves();
         movesMap.replaceAll((key, value) -> holes.getOrDefault(value, value));
         phase.setNewAnimalMoves(movesMap);
-        return true;
     }
 
     @Override
-    public boolean handle(GrowGrassPhase phase) {
+    public void handle(GrowGrassPhase phase) {
         HashSet<Vector2D> positions = phase.getBlockedFields();
         positions.addAll(holes.entrySet()
             .stream()
             .flatMap(entry -> Stream.of(entry.getKey(), entry.getValue()))
             .collect(Collectors.toSet()));
-        return true;
     }
 
 

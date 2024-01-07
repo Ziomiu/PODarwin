@@ -31,19 +31,21 @@ public class ReproduceAnimalsService {
         return groupedAnimals;
     }
 
-    public void reproduceAnimals(HashSet<Animal> animals) {
+    public HashMap<Animal, Vector2D> reproduceAnimals(HashSet<Animal> animals) {
+        HashMap<Animal, Vector2D> childrenMoves = new HashMap<>();
         HashMap<Vector2D, ArrayList<Animal>> groupedAnimals = groupAnimalsReproduce(animals);
         AnimalComparator animalComparator = new AnimalComparator();
         for (Vector2D position : groupedAnimals.keySet()) {
             if (groupedAnimals.get(position).size() >= 2) {
                 groupedAnimals.get(position).sort(animalComparator);
-                addChild(animals, groupedAnimals.get(position).get(groupedAnimals.get(position).size() - 1),
-                    groupedAnimals.get(position).get(groupedAnimals.get(position).size() - 2));
+                childrenMoves.put(addChild(animals, groupedAnimals.get(position).get(groupedAnimals.get(position).size() - 1),
+                    groupedAnimals.get(position).get(groupedAnimals.get(position).size() - 2)), position);
             }
         }
+        return childrenMoves;
     }
 
-    private void addChild(HashSet<Animal> animals, Animal parent1, Animal parent2) {
+    private Animal addChild(HashSet<Animal> animals, Animal parent1, Animal parent2) {
         Random random = new Random();
         boolean isGenomeOrdered = parent1.getGenomeSequence() instanceof OrderedGenomeSequence;
         int genesPart = random.nextInt(2);
@@ -80,6 +82,8 @@ public class ReproduceAnimalsService {
             parent2
         );
         animals.add(child);
+        System.out.println("Animal was born on position " + child.getPosition());
+        return child;
     }
 
     private void mutate(List<Genome> newGenome) {

@@ -9,7 +9,7 @@ import agh.ics.oop.model.world.phases.GrowGrassPhase;
 import agh.ics.oop.model.world.phases.InitPhase;
 import agh.ics.oop.model.world.phases.MovePhase;
 
-public class BoundaryLayer implements MapLayer {
+public class BoundaryLayer extends AbstractLayer {
     private final Boundary boundary;
     private final boolean wrapWorld;
 
@@ -19,13 +19,12 @@ public class BoundaryLayer implements MapLayer {
     }
 
     @Override
-    public boolean handle(InitPhase phase) {
+    public void handle(InitPhase phase) {
         phase.setMapBoundary(boundary);
-        return true;
     }
 
     @Override
-    public boolean handle(MovePhase phase) {
+    public void handle(MovePhase phase) {
         var moves = phase.getNewAnimalMoves();
         for (Animal animal : moves.keySet()) {
             var pos = moves.get(animal);
@@ -45,18 +44,15 @@ public class BoundaryLayer implements MapLayer {
                 moves.put(animal, new Vector2D(boundary.upper().x(), pos.y()));
             }
         }
-        return true;
     }
 
     @Override
-    public boolean handle(GrowGrassPhase phase) {
+    public void handle(GrowGrassPhase phase) {
         phase.setMapBoundary(boundary);
-        return true;
     }
 
     @Override
-    public boolean handle(DisplayPhase phase) {
+    public void handle(DisplayPhase phase) {
         phase.setMapBoundary(boundary);
-        return true;
     }
 }

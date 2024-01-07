@@ -149,7 +149,7 @@ public class WorldLayersBuilder {
         boundaryLayer.setNext(grassLayer);
 
         if (initialHoleCount > 0) {
-            HoleLayer holeLayer = new HoleLayer(boundary, initialGrassCount);
+            HoleLayer holeLayer = new HoleLayer(boundary, initialHoleCount);
             holeLayer.setNext(boundaryLayer);
 
             return holeLayer;

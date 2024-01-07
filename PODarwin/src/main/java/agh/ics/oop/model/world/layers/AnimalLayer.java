@@ -11,12 +11,14 @@ import agh.ics.oop.utils.*;
 import java.util.*;
 import java.util.function.Supplier;
 
-public class AnimalLayer implements MapLayer {
+public class AnimalLayer extends AbstractLayer {
     private final AnimalFactory animalFactory;
     private final ReproduceAnimalsService reproduceAnimalsService;
     private final Supplier<GenomeSequence> genomeSequenceSupplier;
     private final int initialAnimalsCount;
+    private HashSet<Grass> eatenGrass;
     private HashSet<Animal> animals;
+    private HashMap<Animal, Vector2D> newbornMoves = new HashMap<>();
 
     public AnimalLayer(
         AnimalFactory animalFactory,
@@ -28,11 +30,12 @@ public class AnimalLayer implements MapLayer {
         this.reproduceAnimalsService = reproduceAnimalsService;
         this.genomeSequenceSupplier = genomeSequenceSupplier;
         this.initialAnimalsCount = initialAnimalsCount;
+        this.eatenGrass = new HashSet<>();
         this.animals = new HashSet<>();
     }
 
     @Override
-    public boolean handle(InitPhase phase) {
+    public void handle(InitPhase phase) {
         //Animals cant spawn on holes?
         PositionsRange positionsRange = new PositionsRange(
             phase.getMapBoundary(),
@@ -42,34 +45,42 @@ public class AnimalLayer implements MapLayer {
             animals.add(animalFactory.getAnimal(position, genomeSequenceSupplier.get()));
         }
         phase.setAnimals(animals);
-        return true;
     }
 
     @Override
-    public boolean handle(MovePhase phase) {
-        phase.setNewAnimalMoves(MoveAnimalService.moveAnimals(animals, phase.getNewAnimalMoves()));
-        return true;
+    public void handle(MovePhase phase) {
+        HashMap<Animal, Vector2D> tempMoves = phase.getNewAnimalMoves();
+        tempMoves.putAll(newbornMoves);
+        phase.setNewAnimalMoves(MoveAnimalService.moveAnimals(animals, tempMoves));
     }
 
 
     @Override
-    public boolean handle(EatPhase phase) {
+    public void handle(EatPhase phase) {
         HashSet<Grass> currentGrass = phase.getGrass();
-        currentGrass.removeAll(FeedAnimalService.eatGrass(phase.getGrassPosition(), animals));
+        eatenGrass = FeedAnimalService.eatGrass(phase.getGrassPosition(), animals);
+        currentGrass.removeAll(eatenGrass);
         phase.setGrass(currentGrass);
-        return true;
     }
 
     @Override
-    public boolean handle(ReproducePhase phase) {
-        reproduceAnimalsService.reproduceAnimals(animals);
-        return true;
+    public void handle(ReproducePhase phase) {
+        newbornMoves.clear();
+        newbornMoves.putAll(reproduceAnimalsService.reproduceAnimals(animals));
     }
 
     @Override
-    public boolean handle(CleanupPhase phase) {
-        phase.getRemovedAnimals().forEach(animals::remove);
-        return true;
+    public void handle(CleanupPhase phase) {
+        ArrayList<Animal> removedAnimals = new ArrayList<>();
+        for (Animal animal : animals) {
+            if (animal.getEnergy() == 0) {
+                removedAnimals.add(animal);
+                System.out.println("Animal died on position " + animal.getPosition());
+            }
+        }
+        animals.removeAll(removedAnimals);
+        phase.setRemovedAnimals(removedAnimals);
+        phase.setEatenGrass(eatenGrass);
     }
 
     public HashSet<Animal> getAnimals() {
