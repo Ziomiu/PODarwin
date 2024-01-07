@@ -17,6 +17,7 @@ public class InitPhase implements Phase {
 
     @Override
     public void accept(MapLayer layer) {
+        System.out.println("INIT");
         layer.handle(this);
     }
 

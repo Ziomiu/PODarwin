@@ -32,7 +32,7 @@ public class AnimalLayer implements MapLayer {
     }
 
     @Override
-    public boolean handle(InitPhase phase) {
+    public void handle(InitPhase phase) {
         //Animals cant spawn on holes?
         PositionsRange positionsRange = new PositionsRange(
             phase.getMapBoundary(),
@@ -42,34 +42,29 @@ public class AnimalLayer implements MapLayer {
             animals.add(animalFactory.getAnimal(position, genomeSequenceSupplier.get()));
         }
         phase.setAnimals(animals);
-        return true;
     }
 
     @Override
-    public boolean handle(MovePhase phase) {
+    public void handle(MovePhase phase) {
         phase.setNewAnimalMoves(MoveAnimalService.moveAnimals(animals, phase.getNewAnimalMoves()));
-        return true;
     }
 
 
     @Override
-    public boolean handle(EatPhase phase) {
+    public void handle(EatPhase phase) {
         HashSet<Grass> currentGrass = phase.getGrass();
         currentGrass.removeAll(FeedAnimalService.eatGrass(phase.getGrassPosition(), animals));
         phase.setGrass(currentGrass);
-        return true;
     }
 
     @Override
-    public boolean handle(ReproducePhase phase) {
+    public void handle(ReproducePhase phase) {
         reproduceAnimalsService.reproduceAnimals(animals);
-        return true;
     }
 
     @Override
-    public boolean handle(CleanupPhase phase) {
+    public void handle(CleanupPhase phase) {
         phase.getRemovedAnimals().forEach(animals::remove);
-        return true;
     }
 
     public HashSet<Animal> getAnimals() {

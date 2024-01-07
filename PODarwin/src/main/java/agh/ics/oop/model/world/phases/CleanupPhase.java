@@ -12,6 +12,7 @@ public class CleanupPhase implements Phase {
 
     @Override
     public void accept(MapLayer layer) {
+        System.out.println("CLEANUP");
         layer.handle(this);
     }
 

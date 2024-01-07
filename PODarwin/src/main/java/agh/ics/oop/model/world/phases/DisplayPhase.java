@@ -14,6 +14,7 @@ public class DisplayPhase implements Phase {
 
     @Override
     public void accept(MapLayer layer) {
+        System.out.println("DISPLAY");
         layer.handle(this);
     }
 

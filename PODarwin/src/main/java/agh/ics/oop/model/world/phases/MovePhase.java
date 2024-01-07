@@ -11,6 +11,7 @@ public class MovePhase implements Phase {
 
     @Override
     public void accept(MapLayer layer) {
+        System.out.println("MOVE");
         layer.handle(this);
     }
 

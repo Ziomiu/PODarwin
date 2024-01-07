@@ -30,6 +30,7 @@ public class EatPhase implements Phase {
 
     @Override
     public void accept(MapLayer layer) {
+        System.out.println("EAT");
         layer.handle(this);
     }
 }

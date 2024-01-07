@@ -57,14 +57,15 @@ public class GrassLayer implements MapLayer {
     }
 
     @Override
-    public boolean handle(InitPhase phase) {
+    public void handle(InitPhase phase) {
         if (!this.hasEquator) {
             phase.setGrasses(this.grass);
             growGrass(phase.getMapBoundary(), this.initialGrassPatchesCount,
                 0, new HashSet<>(phase.getHoles().keySet()), new HashSet<>(phase.getHoles().keySet()));
             phase.setGrasses(this.grass);
-            return true;
+            return;
         }
+
         createEquator(phase.getMapBoundary());
         int freeEquatorFields = this.equator.numberOfFields();
         int freeNotEquatorFields = phase.getMapBoundary().numberOfFields() - this.equator.numberOfFields();
@@ -74,22 +75,19 @@ public class GrassLayer implements MapLayer {
         var allGrasses = new HashSet<>(this.grass);
         allGrasses.addAll(this.equatorGrass);
         phase.setGrasses(allGrasses);
-        return true;
     }
 
     @Override
-    public boolean handle(EatPhase phase) {
+    public void handle(EatPhase phase) {
         var allGrasses = new HashSet<>(this.grass);
         allGrasses.addAll(this.equatorGrass);
         phase.setGrass(allGrasses);
-        return true;
     }
 
     @Override
-    public boolean handle(CleanupPhase phase) {
+    public void handle(CleanupPhase phase) {
         phase.getEatenGrass().forEach(this.grass::remove);
         phase.getEatenGrass().forEach(this.equatorGrass::remove);
-        return true;
     }
 
     private void growGrass(Boundary boundary, int grassOutsideOfEquator, int grassOnEquator,
@@ -142,7 +140,7 @@ public class GrassLayer implements MapLayer {
     }
 
     @Override
-    public boolean handle(GrowGrassPhase phase) {
+    public void handle(GrowGrassPhase phase) {
         var allGrasses = phase.getBlockedFields();
         allGrasses.addAll(getAllGrassPositions());
         phase.setBlockedFields(allGrasses);
@@ -152,15 +150,16 @@ public class GrassLayer implements MapLayer {
             var occupied = new HashSet<>(phase.getBlockedFields());
             occupied.addAll(this.equator.generateAllPositions());
             findPlacesToGrowGrass(phase.getMapBoundary(), freeNotEquatorFields, freeEquatorFields, occupied, phase.getBlockedFields(), grassGrownEachPhase);
-            return true;
+            return;
         }
+
         if (phase.getMapBoundary().numberOfFields() - phase.getBlockedFields().size() >= this.grassGrownEachPhase) {
             growGrass(phase.getMapBoundary(), this.grassGrownEachPhase, 0, phase.getBlockedFields(), phase.getBlockedFields());
-        } else {
-            growGrass(phase.getMapBoundary(), phase.getMapBoundary().numberOfFields() - phase.getBlockedFields().size(),
-                0, phase.getBlockedFields(), phase.getBlockedFields());
+            return;
         }
-        return true;
+
+        growGrass(phase.getMapBoundary(), phase.getMapBoundary().numberOfFields() - phase.getBlockedFields().size(),
+            0, phase.getBlockedFields(), phase.getBlockedFields());
     }
 
     public HashSet<Grass> getGrass() {
