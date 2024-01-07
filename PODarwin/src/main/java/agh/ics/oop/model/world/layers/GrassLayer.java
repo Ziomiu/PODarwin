@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class GrassLayer implements MapLayer {
+public class GrassLayer extends AbstractLayer {
     private final GrassFactory grassFactory;
     private final int initialGrassPatchesCount;
     private final int grassGrownEachPhase;
@@ -84,12 +84,6 @@ public class GrassLayer implements MapLayer {
         phase.setGrass(allGrasses);
     }
 
-    @Override
-    public void handle(CleanupPhase phase) {
-        phase.getEatenGrass().forEach(this.grass::remove);
-        phase.getEatenGrass().forEach(this.equatorGrass::remove);
-    }
-
     private void growGrass(Boundary boundary, int grassOutsideOfEquator, int grassOnEquator,
                            HashSet<Vector2D> occupiedOutsideOfEquator, HashSet<Vector2D> occupiedOnEquator) {
         PositionsRange positionsRange = new PositionsRange(boundary, grassOutsideOfEquator, occupiedOutsideOfEquator);
@@ -141,9 +135,13 @@ public class GrassLayer implements MapLayer {
 
     @Override
     public void handle(GrowGrassPhase phase) {
-        var allGrasses = phase.getBlockedFields();
-        allGrasses.addAll(getAllGrassPositions());
-        phase.setBlockedFields(allGrasses);
+        // todo: try to find better place for it
+        phase.getEatenGrass().forEach(this.grass::remove);
+        phase.getEatenGrass().forEach(this.equatorGrass::remove);
+
+        var blockedFields = phase.getBlockedFields();
+        blockedFields.addAll(getAllGrassPositions());
+        phase.setBlockedFields(blockedFields);
         if (this.hasEquator) {
             int freeEquatorFields = this.equator.numberOfFields() - this.equatorGrass.size();
             int freeNotEquatorFields = phase.getMapBoundary().numberOfFields() - this.grass.size() - this.equator.numberOfFields();

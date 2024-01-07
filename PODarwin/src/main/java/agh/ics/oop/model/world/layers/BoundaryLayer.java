@@ -9,7 +9,7 @@ import agh.ics.oop.model.world.phases.GrowGrassPhase;
 import agh.ics.oop.model.world.phases.InitPhase;
 import agh.ics.oop.model.world.phases.MovePhase;
 
-public class BoundaryLayer implements MapLayer {
+public class BoundaryLayer extends AbstractLayer {
     private final Boundary boundary;
     private final boolean wrapWorld;
 

@@ -11,11 +11,12 @@ import agh.ics.oop.utils.*;
 import java.util.*;
 import java.util.function.Supplier;
 
-public class AnimalLayer implements MapLayer {
+public class AnimalLayer extends AbstractLayer {
     private final AnimalFactory animalFactory;
     private final ReproduceAnimalsService reproduceAnimalsService;
     private final Supplier<GenomeSequence> genomeSequenceSupplier;
     private final int initialAnimalsCount;
+    private HashSet<Grass> eatenGrass;
     private HashSet<Animal> animals;
 
     public AnimalLayer(
@@ -28,6 +29,7 @@ public class AnimalLayer implements MapLayer {
         this.reproduceAnimalsService = reproduceAnimalsService;
         this.genomeSequenceSupplier = genomeSequenceSupplier;
         this.initialAnimalsCount = initialAnimalsCount;
+        this.eatenGrass = new HashSet<>();
         this.animals = new HashSet<>();
     }
 
@@ -53,7 +55,8 @@ public class AnimalLayer implements MapLayer {
     @Override
     public void handle(EatPhase phase) {
         HashSet<Grass> currentGrass = phase.getGrass();
-        currentGrass.removeAll(FeedAnimalService.eatGrass(phase.getGrassPosition(), animals));
+        eatenGrass = FeedAnimalService.eatGrass(phase.getGrassPosition(), animals);
+        currentGrass.removeAll(eatenGrass);
         phase.setGrass(currentGrass);
     }
 
@@ -65,6 +68,7 @@ public class AnimalLayer implements MapLayer {
     @Override
     public void handle(CleanupPhase phase) {
         phase.getRemovedAnimals().forEach(animals::remove);
+        phase.setEatenGrass(eatenGrass);
     }
 
     public HashSet<Animal> getAnimals() {

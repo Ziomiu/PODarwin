@@ -17,11 +17,7 @@ public interface MapLayer {
 
     default void handle(DisplayPhase phase) {}
 
-    default MapLayer getNext() {
-        return null;
-    }
+    MapLayer getNext();
 
-    default MapLayer setNext(MapLayer phase) {
-        return null;
-    }
+    void setNext(MapLayer phase);
 }

@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class HoleLayer implements MapLayer {
+public class HoleLayer extends AbstractLayer {
 
     private HashMap<Vector2D, Vector2D> holes;
 
