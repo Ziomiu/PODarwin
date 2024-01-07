@@ -37,53 +37,53 @@
 
     <Label text="Map size:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
     <HBox GridPane.columnIndex="1" GridPane.rowIndex="4">
-        <TextField fx:id="mapWidthField" prefWidth="50"/>
+        <TextField fx:id="mapWidthField" prefWidth="50" text="10"/>
         <Text text=" x "/>
-        <TextField fx:id="mapHeightField" prefWidth="50"/>
+        <TextField fx:id="mapHeightField" prefWidth="50" text="10"/>
     </HBox>
 
     <Label text="Tunnels count:" labelFor="$tunnelsCountField" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
-    <TextField fx:id="tunnelsCountField" GridPane.columnIndex="1" GridPane.rowIndex="6" prefWidth="50"/>
+    <TextField fx:id="tunnelsCountField" GridPane.columnIndex="1" GridPane.rowIndex="6" prefWidth="50" text="4"/>
 
     <Label text="Initial grass count:" labelFor="$initialGrassCountField" GridPane.columnIndex="0"
            GridPane.rowIndex="8"/>
-    <TextField fx:id="initialGrassCountField" GridPane.columnIndex="1" GridPane.rowIndex="8" prefWidth="50"/>
+    <TextField fx:id="initialGrassCountField" GridPane.columnIndex="1" GridPane.rowIndex="8" prefWidth="50" text="10"/>
 
     <Label text="Grass grown each iteration:" labelFor="$grassGrownEachIterationField" GridPane.columnIndex="0"
            GridPane.rowIndex="10"/>
-    <TextField fx:id="grassGrownEachIterationField" GridPane.columnIndex="1" GridPane.rowIndex="10" prefWidth="50"/>
+    <TextField fx:id="grassGrownEachIterationField" GridPane.columnIndex="1" GridPane.rowIndex="10" prefWidth="50" text="3"/>
 
     <Label text="Initial animal energy:" labelFor="$initialAnimalEnergyField" GridPane.columnIndex="0"
            GridPane.rowIndex="12"/>
-    <TextField fx:id="initialAnimalEnergyField" GridPane.columnIndex="1" GridPane.rowIndex="12" prefWidth="50"/>
+    <TextField fx:id="initialAnimalEnergyField" GridPane.columnIndex="1" GridPane.rowIndex="12" prefWidth="50" text="20"/>
 
     <Label text="Energy of eaten grass:" labelFor="$energyOfGrassField" GridPane.columnIndex="0"
            GridPane.rowIndex="14"/>
-    <TextField fx:id="energyOfGrassField" GridPane.columnIndex="1" GridPane.rowIndex="14" prefWidth="50"/>
+    <TextField fx:id="energyOfGrassField" GridPane.columnIndex="1" GridPane.rowIndex="14" prefWidth="50" text="10"/>
 
     <Label text="Genome length:" labelFor="$genomeLengthField" GridPane.columnIndex="0"
            GridPane.rowIndex="16"/>
-    <TextField fx:id="genomeLengthField" GridPane.columnIndex="1" GridPane.rowIndex="16" prefWidth="50"/>
+    <TextField fx:id="genomeLengthField" GridPane.columnIndex="1" GridPane.rowIndex="16" prefWidth="50" text="10"/>
 
     <Label text="Initial animals count:" labelFor="$initialAnimalsCountField" GridPane.columnIndex="0"
            GridPane.rowIndex="18"/>
-    <TextField fx:id="initialAnimalsCountField" GridPane.columnIndex="1" GridPane.rowIndex="18" prefWidth="50"/>
+    <TextField fx:id="initialAnimalsCountField" GridPane.columnIndex="1" GridPane.rowIndex="18" prefWidth="50" text="3"/>
 
     <Label text="Energy required to be able to reproduce:" labelFor="$reproductionEnergyThresholdField"
            GridPane.columnIndex="0" GridPane.rowIndex="20"/>
-    <TextField fx:id="reproductionEnergyThresholdField" GridPane.columnIndex="1" GridPane.rowIndex="20" prefWidth="50"/>
+    <TextField fx:id="reproductionEnergyThresholdField" GridPane.columnIndex="1" GridPane.rowIndex="20" prefWidth="50"  text="20"/>
 
     <Label text="Energy required for reproduction:" labelFor="$reproductionEnergyRequiredField"
            GridPane.columnIndex="0" GridPane.rowIndex="22"/>
-    <TextField fx:id="reproductionEnergyRequiredField" GridPane.columnIndex="1" GridPane.rowIndex="22" prefWidth="50"/>
+    <TextField fx:id="reproductionEnergyRequiredField" GridPane.columnIndex="1" GridPane.rowIndex="22" prefWidth="50" text="20"/>
 
     <Label text="Minimum number of mutations:" labelFor="$reproductionMutationsMinField"
            GridPane.columnIndex="0" GridPane.rowIndex="24"/>
-    <TextField fx:id="reproductionMutationsMinField" GridPane.columnIndex="1" GridPane.rowIndex="24" prefWidth="50"/>
+    <TextField fx:id="reproductionMutationsMinField" GridPane.columnIndex="1" GridPane.rowIndex="24" prefWidth="50" text="0"/>
 
     <Label text="Maximum number of mutations:" labelFor="$reproductionMutationsMaxField"
            GridPane.columnIndex="0" GridPane.rowIndex="26"/>
-    <TextField fx:id="reproductionMutationsMaxField" GridPane.columnIndex="1" GridPane.rowIndex="26" prefWidth="50"/>
+    <TextField fx:id="reproductionMutationsMaxField" GridPane.columnIndex="1" GridPane.rowIndex="26" prefWidth="50" text="4"/>
 
     <Button fx:id="startValidateButton" text="Go" GridPane.rowIndex="28"/>
 
