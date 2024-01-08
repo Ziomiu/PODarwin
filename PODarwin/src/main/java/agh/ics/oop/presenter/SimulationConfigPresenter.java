@@ -69,6 +69,9 @@ public class SimulationConfigPresenter {
             if (wrappingWorldCheckbox.isSelected()) {
                 builder.withWrappingWorld();
             }
+            if(equatorCheckbox.isSelected()){
+                builder.withEquator();
+            }
 
             try {
                 builder.withBoundary(new Boundary(

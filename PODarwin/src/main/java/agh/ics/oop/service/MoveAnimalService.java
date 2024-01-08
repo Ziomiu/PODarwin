@@ -10,7 +10,7 @@ public class MoveAnimalService {
     public static HashMap<Animal, Vector2D> moveAnimals(HashSet<Animal> animals, HashMap<Animal, Vector2D> moves) {
         HashMap<Animal, Vector2D> animalMoves = new HashMap<>();
         for (Animal animal : animals) {
-            System.out.println("Animal moved from " + animal.getPosition() + " to " + moves.get(animal));
+            System.out.println("Animal moved from " + animal.getPosition() + " to " + moves.get(animal) + ", energy: " + animal.getEnergy());
             animal.setPosition(moves.get(animal));
             animal.removeEnergy(1);
             animal.getAnimalStats().increaseAge();

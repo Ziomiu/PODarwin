@@ -1,6 +1,7 @@
 package agh.ics.oop;
 
 import agh.ics.oop.model.classes.Animal;
+import agh.ics.oop.model.classes.Grass;
 import agh.ics.oop.model.classes.Vector2D;
 import agh.ics.oop.model.world.layers.MapLayer;
 import agh.ics.oop.model.world.phases.*;
@@ -47,6 +48,9 @@ public class Simulation {
         GrowGrassPhase growGrassPhase = new GrowGrassPhase();
         // todo: can we do it better?
         growGrassPhase.setEatenGrass(cleanupPhase.getEatenGrass());
+        permanentlyBlockedFields.removeAll(cleanupPhase.getEatenGrass().stream()
+            .map(Grass::getPosition)
+            .toList());
         growGrassPhase.setBlockedFields(permanentlyBlockedFields);
         visitLayers(growGrassPhase);
     }
