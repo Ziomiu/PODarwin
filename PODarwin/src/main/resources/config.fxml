@@ -6,85 +6,123 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Button?>
-<GridPane xmlns="http://javafx.com/javafx"
-          xmlns:fx="http://javafx.com/fxml"
-          fx:controller="agh.ics.oop.presenter.SimulationConfigPresenter"
-          minHeight="800.0" minWidth="500.0" hgap="10" vgap="10">
+<?import javafx.scene.control.Spinner?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="agh.ics.oop.presenter.SimulationConfigPresenter"
+      minHeight="800.0" minWidth="500.0">
     <padding>
         <Insets top="25" right="25" bottom="10" left="25"/>
     </padding>
-    <Text
-            text="Set up the simulation"
-            GridPane.columnIndex="0"
-            GridPane.rowIndex="0"
-            GridPane.columnSpan="2"
-            style="-fx-font-size: 18px;"
-    />
 
-    <Label text="Alternating genomes" labelFor="$alternatingGenomesCheckbox" GridPane.columnIndex="0"
-           GridPane.rowIndex="1"/>
-    <CheckBox fx:id="alternatingGenomesCheckbox" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    <Text text="Set up the simulation" style="-fx-font-size: 18px;" BorderPane.alignment="TOP_CENTER"/>
 
-    <Label text="World wrap" labelFor="$wrappingWorldCheckbox" GridPane.columnIndex="0"
-           GridPane.rowIndex="2"/>
-    <CheckBox fx:id="wrappingWorldCheckbox" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-
-    <Label text="Equator" labelFor="$equatorCheckbox" GridPane.columnIndex="0"
-           GridPane.rowIndex="3"/>
-    <CheckBox fx:id="equatorCheckbox" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-
-    <Label text="Map size:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-    <HBox GridPane.columnIndex="1" GridPane.rowIndex="4">
-        <TextField fx:id="mapWidthField" prefWidth="50" text="10"/>
-        <Text text=" x "/>
-        <TextField fx:id="mapHeightField" prefWidth="50" text="10"/>
+    <HBox prefHeight="40" alignment="CENTER_LEFT">
+        <Label text="Alternating genomes" labelFor="$alternatingGenomesCheckbox"/>
+        <Region prefWidth="32"/>
+        <CheckBox fx:id="alternatingGenomesCheckbox"/>
     </HBox>
 
-    <Label text="Tunnels count:" labelFor="$tunnelsCountField" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
-    <TextField fx:id="tunnelsCountField" GridPane.columnIndex="1" GridPane.rowIndex="6" prefWidth="50" text="4"/>
+    <HBox prefHeight="40" alignment="CENTER_LEFT">
+        <Label text="World wrap" labelFor="$wrappingWorldCheckbox"/>
+        <Region prefWidth="32"/>
+        <CheckBox fx:id="wrappingWorldCheckbox"/>
+    </HBox>
 
-    <Label text="Initial grass count:" labelFor="$initialGrassCountField" GridPane.columnIndex="0"
-           GridPane.rowIndex="8"/>
-    <TextField fx:id="initialGrassCountField" GridPane.columnIndex="1" GridPane.rowIndex="8" prefWidth="50" text="10"/>
+    <HBox prefHeight="40" alignment="CENTER_LEFT">
+        <Label text="Equator" labelFor="$equatorCheckbox"/>
+        <Region prefWidth="32"/>
+        <CheckBox fx:id="equatorCheckbox"/>
+    </HBox>
 
-    <Label text="Grass grown each iteration:" labelFor="$grassGrownEachIterationField" GridPane.columnIndex="0"
-           GridPane.rowIndex="10"/>
-    <TextField fx:id="grassGrownEachIterationField" GridPane.columnIndex="1" GridPane.rowIndex="10" prefWidth="50" text="3"/>
+    <HBox prefHeight="40" alignment="CENTER_LEFT">
+        <Label text="Map size:"/>
+        <Region prefWidth="32"/>
+        <Spinner fx:id="mapWidthField" min="1" max="100" prefWidth="80"/>
+        <Text text=" by "/>
+        <Spinner fx:id="mapHeightField" min="1" max="100" prefWidth="80"/>
+    </HBox>
 
-    <Label text="Initial animal energy:" labelFor="$initialAnimalEnergyField" GridPane.columnIndex="0"
-           GridPane.rowIndex="12"/>
-    <TextField fx:id="initialAnimalEnergyField" GridPane.columnIndex="1" GridPane.rowIndex="12" prefWidth="50" text="20"/>
+    <HBox prefHeight="40" alignment="CENTER_LEFT">
+        <Label text="Tunnels count:" labelFor="$tunnelsCountField"/>
+        <Region prefWidth="32"/>
+        <Spinner fx:id="tunnelsCountField" min="0" max="100" prefWidth="80"/>
+    </HBox>
 
-    <Label text="Energy of eaten grass:" labelFor="$energyOfGrassField" GridPane.columnIndex="0"
-           GridPane.rowIndex="14"/>
-    <TextField fx:id="energyOfGrassField" GridPane.columnIndex="1" GridPane.rowIndex="14" prefWidth="50" text="10"/>
+    <HBox prefHeight="40" alignment="CENTER_LEFT">
+        <Label text="Initial grass count:" labelFor="$initialGrassCountField"/>
+        <Region prefWidth="32"/>
+        <Spinner fx:id="initialGrassCountField" min="0" max="1000" prefWidth="80"/>
+    </HBox>
 
-    <Label text="Genome length:" labelFor="$genomeLengthField" GridPane.columnIndex="0"
-           GridPane.rowIndex="16"/>
-    <TextField fx:id="genomeLengthField" GridPane.columnIndex="1" GridPane.rowIndex="16" prefWidth="50" text="10"/>
+    <HBox prefHeight="40" alignment="CENTER_LEFT">
+        <Label text="Grass grown each iteration:" labelFor="$grassGrownEachIterationField"/>
+        <Region prefWidth="32"/>
+        <Spinner fx:id="grassGrownEachIterationField" min="0" max="100" prefWidth="80"/>
+    </HBox>
 
-    <Label text="Initial animals count:" labelFor="$initialAnimalsCountField" GridPane.columnIndex="0"
-           GridPane.rowIndex="18"/>
-    <TextField fx:id="initialAnimalsCountField" GridPane.columnIndex="1" GridPane.rowIndex="18" prefWidth="50" text="3"/>
+    <HBox prefHeight="40" alignment="CENTER_LEFT">
+        <Label text="Initial animal energy:" labelFor="$initialAnimalEnergyField"/>
+        <Region prefWidth="32"/>
+        <Spinner fx:id="initialAnimalEnergyField" min="20" max="100" prefWidth="80"/>
+    </HBox>
 
-    <Label text="Energy required to be able to reproduce:" labelFor="$reproductionEnergyThresholdField"
-           GridPane.columnIndex="0" GridPane.rowIndex="20"/>
-    <TextField fx:id="reproductionEnergyThresholdField" GridPane.columnIndex="1" GridPane.rowIndex="20" prefWidth="50"  text="20"/>
+    <HBox prefHeight="40" alignment="CENTER_LEFT">
+        <Label text="Energy of eaten grass:" labelFor="$energyOfGrassField"/>
+        <Region prefWidth="32"/>
+        <Spinner fx:id="energyOfGrassField" min="1" max="100" prefWidth="80"/>
+    </HBox>
 
-    <Label text="Energy required for reproduction:" labelFor="$reproductionEnergyRequiredField"
-           GridPane.columnIndex="0" GridPane.rowIndex="22"/>
-    <TextField fx:id="reproductionEnergyRequiredField" GridPane.columnIndex="1" GridPane.rowIndex="22" prefWidth="50" text="20"/>
+    <HBox prefHeight="40" alignment="CENTER_LEFT">
+        <Label text="Genome length:" labelFor="$genomeLengthField"/>
+        <Region prefWidth="32"/>
+        <Spinner fx:id="genomeLengthField" min="1" max="20" prefWidth="80"/>
+    </HBox>
 
-    <Label text="Minimum number of mutations:" labelFor="$reproductionMutationsMinField"
-           GridPane.columnIndex="0" GridPane.rowIndex="24"/>
-    <TextField fx:id="reproductionMutationsMinField" GridPane.columnIndex="1" GridPane.rowIndex="24" prefWidth="50" text="0"/>
+    <HBox prefHeight="40" alignment="CENTER_LEFT">
+        <Label text="Initial animals count:" labelFor="$initialAnimalsCountField"/>
+        <Region prefWidth="32"/>
+        <Spinner fx:id="initialAnimalsCountField" min="1" max="100" prefWidth="80"/>
+    </HBox>
 
-    <Label text="Maximum number of mutations:" labelFor="$reproductionMutationsMaxField"
-           GridPane.columnIndex="0" GridPane.rowIndex="26"/>
-    <TextField fx:id="reproductionMutationsMaxField" GridPane.columnIndex="1" GridPane.rowIndex="26" prefWidth="50" text="4"/>
+    <HBox prefHeight="40" alignment="CENTER_LEFT">
+        <Label text="Energy required to be able to reproduce:" labelFor="$reproductionEnergyThresholdField"/>
+        <Region prefWidth="32"/>
+        <Spinner fx:id="reproductionEnergyThresholdField" min="1" max="100" prefWidth="80"/>
+    </HBox>
 
-    <Button fx:id="startValidateButton" text="Go" GridPane.rowIndex="28"/>
+    <HBox prefHeight="40" alignment="CENTER_LEFT">
+        <Label text="Energy required for reproduction:" labelFor="$reproductionEnergyRequiredField"/>
+        <Region prefWidth="32"/>
+        <Spinner fx:id="reproductionEnergyRequiredField" min="1" max="100" prefWidth="80"/>
+    </HBox>
 
-</GridPane>
+    <HBox prefHeight="40" alignment="CENTER_LEFT">
+        <Label text="Minimum number of mutations:" labelFor="$reproductionMutationsMinField"/>
+        <Region prefWidth="32"/>
+        <Spinner fx:id="reproductionMutationsMinField" min="0" max="10" prefWidth="80"/>
+    </HBox>
+
+    <HBox prefHeight="40" alignment="CENTER_LEFT">
+        <Label text="Maximum number of mutations:" labelFor="$reproductionMutationsMaxField"/>
+        <Region prefWidth="32"/>
+        <Spinner fx:id="reproductionMutationsMaxField" min="0" max="10" prefWidth="80"/>
+    </HBox>
+
+    <HBox alignment="CENTER" style="-fx-padding: 2em 0 0 0;">
+        <Button
+            fx:id="startValidateButton"
+            text="Go!"
+            style="
+                -fx-background-color: linear-gradient(to bottom right, #00f42f, #04cf13);
+                -fx-background-radius: 0.4em;
+                -fx-text-fill: white;
+                -fx-font-weight: 800;
+                -fx-font-size: 1.5em;
+                -fx-padding: 0.4em 2em 0.4em 2em;
+            "
+        />
+    </HBox>
+
+</VBox>
