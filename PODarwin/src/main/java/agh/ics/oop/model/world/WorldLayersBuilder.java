@@ -1,9 +1,9 @@
 package agh.ics.oop.model.world;
 
 import agh.ics.oop.model.classes.*;
-import agh.ics.oop.model.classes.factory.AnimalFactory;
-import agh.ics.oop.model.classes.factory.GenomeSequenceFactory;
-import agh.ics.oop.model.classes.factory.GrassFactory;
+import agh.ics.oop.service.AnimalFactory;
+import agh.ics.oop.service.GenomeSequenceFactory;
+import agh.ics.oop.service.GrassFactory;
 import agh.ics.oop.model.world.layers.*;
 import agh.ics.oop.service.ReproduceAnimalsService;
 

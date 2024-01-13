@@ -1,4 +1,4 @@
-package agh.ics.oop.model.classes.factory;
+package agh.ics.oop.service;
 
 import agh.ics.oop.model.classes.Animal;
 import agh.ics.oop.model.classes.GenomeSequence;

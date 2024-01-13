@@ -15,11 +15,10 @@ public class MapView extends Pane implements MapChangeSubscriber {
 
     @Override
     public void onMapChange(MapChangeEvent event) {
-        if (context == null) {
-            prepareCanvas(event.worldBoundary());
-        }
-
         Platform.runLater(() -> {
+            if (context == null) {
+                prepareCanvas(event.worldBoundary());
+            }
             context.setFill(Color.web("#cfdfa5"));
             context.fillRect(0, 0, 600, 600);
             for (var grass : event.grass()) {

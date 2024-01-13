@@ -1,7 +1,7 @@
 package agh.ics.oop.model.world.layers;
 
 import agh.ics.oop.model.classes.*;
-import agh.ics.oop.model.classes.factory.AnimalFactory;
+import agh.ics.oop.service.AnimalFactory;
 import agh.ics.oop.model.world.phases.*;
 import agh.ics.oop.service.FeedAnimalService;
 import agh.ics.oop.service.MoveAnimalService;
