@@ -5,8 +5,6 @@ import agh.ics.oop.presenter.SimulationPresenter;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -50,7 +48,7 @@ public class App extends Application {
         loader.setLocation(getClass().getClassLoader().getResource("config.fxml"));
         VBox viewRoot = loader.load();
         configPresenter = loader.getController();
-        configPresenter.addConfigSubmittedSubscriber(simulation::runOnLayers);
+        configPresenter.addRunContextSubscriber(simulation::runOnLayers);
         configStage.minWidthProperty().bind(viewRoot.minWidthProperty());
         configStage.minHeightProperty().bind(viewRoot.minHeightProperty());
         configStage.setScene(new Scene(viewRoot));

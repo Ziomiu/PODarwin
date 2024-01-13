@@ -1,5 +1,7 @@
 package agh.ics.oop.model.classes;
 
+import javafx.scene.paint.Color;
+
 public class Hole implements WorldElement, Drawable {
     private final Vector2D position;
     private final Vector2D outPosition;
@@ -10,8 +12,8 @@ public class Hole implements WorldElement, Drawable {
     }
 
     @Override
-    public void draw() {
-        // todo
+    public Color getColor() {
+        return Color.BLACK;
     }
 
     @Override

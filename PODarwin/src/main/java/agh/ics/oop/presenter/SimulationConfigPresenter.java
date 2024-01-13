@@ -7,7 +7,6 @@ import agh.ics.oop.model.world.WorldLayersBuilder;
 import agh.ics.oop.model.world.layers.MapLayer;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -135,7 +134,7 @@ public class SimulationConfigPresenter {
         });
     }
 
-    public void addConfigSubmittedSubscriber(Consumer<MapLayer> subscriber) {
+    public void addRunContextSubscriber(Consumer<MapLayer> subscriber) {
         configSubmittedSubscribers.add(subscriber);
     }
 

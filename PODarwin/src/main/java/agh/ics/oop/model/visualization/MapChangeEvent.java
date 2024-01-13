@@ -1,4 +1,13 @@
 package agh.ics.oop.model.visualization;
 
-public record MapChangeEvent() {
+import agh.ics.oop.model.classes.*;
+
+import java.util.Set;
+
+public record MapChangeEvent(
+    Boundary worldBoundary,
+    Set<Animal> animals,
+    Set<Grass> grass,
+    Set<Hole> tunnels
+) {
 }

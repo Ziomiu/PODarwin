@@ -4,7 +4,7 @@
 
 <?import agh.ics.oop.components.GlobalStatsNumbers?>
 <?import agh.ics.oop.components.CoverageGraph?>
-<?import javafx.scene.control.Label?>
+<?import agh.ics.oop.components.MapView?>
 <HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="agh.ics.oop.presenter.SimulationPresenter"
@@ -14,6 +14,6 @@
         <CoverageGraph fx:id="coverageGraph"/>
     </VBox>
     <VBox>
-        <Label text="map"/>
+        <MapView/>
     </VBox>
 </HBox>
