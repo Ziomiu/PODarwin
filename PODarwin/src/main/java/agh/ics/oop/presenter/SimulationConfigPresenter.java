@@ -134,7 +134,7 @@ public class SimulationConfigPresenter {
         });
     }
 
-    public void addRunContextSubscriber(Consumer<MapLayer> subscriber) {
+    public void addLayersReadySubscriber(Consumer<MapLayer> subscriber) {
         configSubmittedSubscribers.add(subscriber);
     }
 

@@ -2,20 +2,27 @@ package agh.ics.oop;
 
 import agh.ics.oop.model.classes.Animal;
 import agh.ics.oop.model.classes.Vector2D;
+import agh.ics.oop.model.visualization.GlobalStatsEvent;
+import agh.ics.oop.model.visualization.MapChangeEvent;
+import agh.ics.oop.model.visualization.MapChangeSubscriber;
+import agh.ics.oop.model.visualization.StatsSubscriber;
 import agh.ics.oop.model.world.layers.MapLayer;
 import agh.ics.oop.model.world.phases.*;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 public class Simulation {
     private HashMap<Animal, Vector2D> animalMoves;
     private MapLayer firstLayer;
     private final HashSet<Vector2D> permanentlyBlockedFields;
+    private final List<MapChangeSubscriber> mapChangeSubscribers;
+    private final List<StatsSubscriber<GlobalStatsEvent>> globalStatsSubscribers;
 
     public Simulation() {
         animalMoves = new HashMap<>();
         permanentlyBlockedFields = new HashSet<>();
+        mapChangeSubscribers = new LinkedList<>();
+        globalStatsSubscribers = new LinkedList<>();
     }
 
     public void runOnLayers(MapLayer firstLayer) {
@@ -26,6 +33,14 @@ public class Simulation {
             System.out.printf("===== day %d =====%n", i);
             advanceSimulation();
         }
+    }
+
+    public void addMapChangeSubscriber(MapChangeSubscriber subscriber) {
+        mapChangeSubscribers.add(subscriber);
+    }
+
+    public void addGlobalStatsSubscriber(StatsSubscriber<GlobalStatsEvent> subscriber) {
+        globalStatsSubscribers.add(subscriber);
     }
 
     private void advanceSimulation() {
@@ -49,6 +64,24 @@ public class Simulation {
         growGrassPhase.setEatenGrass(cleanupPhase.getEatenGrass());
         growGrassPhase.setBlockedFields(permanentlyBlockedFields);
         visitLayers(growGrassPhase);
+
+        SummaryPhase summaryPhase = new SummaryPhase();
+        visitLayers(summaryPhase);
+
+        MapChangeEvent mapChangeEvent = new MapChangeEvent(
+            summaryPhase.getMapBoundary(),
+            summaryPhase.getAnimals(),
+            summaryPhase.getGrass(),
+            summaryPhase.getTunnels()
+        );
+
+        for (var subscriber : mapChangeSubscribers) {
+            subscriber.onMapChange(mapChangeEvent);
+        }
+
+        for (var subscriber : globalStatsSubscribers) {
+            subscriber.updateStats(new GlobalStatsEvent(10, 10, "AAABBBCCC", 10, 10, 10, 10));
+        }
     }
 
     private void bootstrapSimulation() {

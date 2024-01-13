@@ -4,15 +4,14 @@ import agh.ics.oop.model.classes.Boundary;
 import agh.ics.oop.model.classes.Grass;
 import agh.ics.oop.model.classes.Vector2D;
 import agh.ics.oop.model.classes.factory.GrassFactory;
-import agh.ics.oop.model.world.phases.CleanupPhase;
-import agh.ics.oop.model.world.phases.EatPhase;
-import agh.ics.oop.model.world.phases.GrowGrassPhase;
-import agh.ics.oop.model.world.phases.InitPhase;
+import agh.ics.oop.model.world.phases.*;
 import agh.ics.oop.utils.PositionsRange;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GrassLayer extends AbstractLayer {
     private final GrassFactory grassFactory;
@@ -157,6 +156,11 @@ public class GrassLayer extends AbstractLayer {
 
         growGrass(phase.getMapBoundary(), phase.getMapBoundary().numberOfFields() - phase.getBlockedFields().size(),
             0, phase.getBlockedFields(), phase.getBlockedFields());
+    }
+
+    @Override
+    public void handle(SummaryPhase phase) {
+        phase.setGrass(Stream.concat(grass.stream(), equatorGrass.stream()).collect(Collectors.toSet()));
     }
 
     public HashSet<Grass> getGrass() {

@@ -13,7 +13,7 @@
         <GlobalStatsNumbers fx:id="globalStatsNumbers"/>
         <CoverageGraph fx:id="coverageGraph"/>
     </VBox>
-    <VBox>
-        <MapView/>
+    <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
+        <MapView fx:id="mapView"/>
     </VBox>
 </HBox>

@@ -13,13 +13,11 @@ import javafx.stage.Stage;
 public class App extends Application {
     private SimulationConfigPresenter configPresenter;
     private SimulationPresenter simulationPresenter;
-    private Stage configStage;
     private Stage primaryStage;
     private final Simulation simulation;
 
     public App() {
         simulation = new Simulation();
-        configStage = new Stage();
     }
 
     @Override
@@ -34,6 +32,8 @@ public class App extends Application {
         loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
         HBox viewRoot = loader.load();
         simulationPresenter = loader.getController();
+        simulationPresenter.getMapChangeSubscribers().forEach(simulation::addMapChangeSubscriber);
+        simulationPresenter.getGlobalStatsSubscribers().forEach(simulation::addGlobalStatsSubscriber);
         Scene scene = new Scene(viewRoot);
         primaryStage.setTitle("Simulation");
         primaryStage.minWidthProperty().bind(viewRoot.minWidthProperty());
@@ -48,7 +48,7 @@ public class App extends Application {
         loader.setLocation(getClass().getClassLoader().getResource("config.fxml"));
         VBox viewRoot = loader.load();
         configPresenter = loader.getController();
-        configPresenter.addRunContextSubscriber(simulation::runOnLayers);
+        configPresenter.addLayersReadySubscriber(simulation::runOnLayers);
         configStage.minWidthProperty().bind(viewRoot.minWidthProperty());
         configStage.minHeightProperty().bind(viewRoot.minHeightProperty());
         configStage.setScene(new Scene(viewRoot));

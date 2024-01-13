@@ -2,6 +2,7 @@ package agh.ics.oop.model.world.layers;
 
 import agh.ics.oop.model.classes.Animal;
 import agh.ics.oop.model.classes.Boundary;
+import agh.ics.oop.model.classes.Hole;
 import agh.ics.oop.model.classes.Vector2D;
 import agh.ics.oop.model.world.phases.*;
 import agh.ics.oop.utils.HoleIterator;
@@ -51,6 +52,17 @@ public class HoleLayer extends AbstractLayer {
             .stream()
             .flatMap(entry -> Stream.of(entry.getKey(), entry.getValue()))
             .collect(Collectors.toSet()));
+    }
+
+    @Override
+    public void handle(SummaryPhase phase) {
+        phase.setTunnels(
+            holes
+                .entrySet()
+                .stream()
+                .map(entry -> new Hole(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toSet())
+        );
     }
 
 
