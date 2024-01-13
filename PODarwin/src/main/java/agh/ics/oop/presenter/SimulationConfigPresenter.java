@@ -5,6 +5,8 @@ import agh.ics.oop.model.classes.ReproductionParams;
 import agh.ics.oop.model.classes.Vector2D;
 import agh.ics.oop.model.world.WorldLayersBuilder;
 import agh.ics.oop.model.world.layers.MapLayer;
+import agh.ics.oop.utils.ConfigReader;
+import agh.ics.oop.utils.ConfigWriter;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -12,12 +14,14 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class SimulationConfigPresenter {
     private final List<Consumer<MapLayer>> configSubmittedSubscribers;
+    private HashMap<String, Integer> settings = new HashMap<>();
 
     @FXML
     public CheckBox alternatingGenomesCheckbox;
@@ -53,6 +57,15 @@ public class SimulationConfigPresenter {
     public Spinner<Integer> reproductionMutationsMaxField;
     @FXML
     public Button startValidateButton;
+    @FXML
+    public Button saveConfigButton;
+    @FXML
+    public TextField ConfigName;
+    @FXML
+    public ComboBox ConfigOptions;
+    @FXML
+    public Button readFileButton;
+
 
     List<Node> errorLabels;
 
@@ -76,7 +89,9 @@ public class SimulationConfigPresenter {
             if (wrappingWorldCheckbox.isSelected()) {
                 builder.withWrappingWorld();
             }
-
+            if (equatorCheckbox.isSelected()) {
+                builder.withEquator();
+            }
             Boundary worldBoundary = new Boundary(
                 new Vector2D(0, 0),
                 new Vector2D(
@@ -128,7 +143,7 @@ public class SimulationConfigPresenter {
                     subscriber.accept(layer);
                 }
 
-                Node originNode = (Node)event.getSource();
+                Node originNode = (Node) event.getSource();
                 originNode.getScene().getWindow().hide();
             }
         });
@@ -142,12 +157,92 @@ public class SimulationConfigPresenter {
         Label errorLabel = new Label(message);
         errorLabel.setStyle("-fx-text-fill: red;");
         errorLabel.setPadding(new Insets(0, 0, 0, 10));
-        ((HBox)input.getParent()).getChildren().add(errorLabel);
+        ((HBox) input.getParent()).getChildren().add(errorLabel);
         errorLabels.add(errorLabel);
     }
 
     private void clearErrorLabels() {
-        errorLabels.forEach((var node) -> ((HBox)node.getParent()).getChildren().remove(node));
+        errorLabels.forEach((var node) -> ((HBox) node.getParent()).getChildren().remove(node));
         errorLabels.clear();
+    }
+
+    @FXML
+    public void saveConfig() {
+        clearErrorLabels();
+        settings.put("IsAlternating", 0);
+        if (alternatingGenomesCheckbox.isSelected()) {
+            settings.put("IsAlternating", 1);
+        }
+        settings.put("IsWrapping", 0);
+        if (wrappingWorldCheckbox.isSelected()) {
+            settings.put("IsWrapping", 1);
+        }
+        settings.put("HasEquator", 0);
+        if (equatorCheckbox.isSelected()) {
+            settings.put("HasEquator", 1);
+        }
+        settings.put("MapHeight", mapHeightField.getValue());
+        settings.put("MapWidth", mapWidthField.getValue());
+        settings.put("HolesCount", tunnelsCountField.getValue());
+        settings.put("InitGrassCount", initialGrassCountField.getValue());
+        settings.put("GrassGrownCount", grassGrownEachIterationField.getValue());
+        settings.put("InitEnergyCount", initialAnimalEnergyField.getValue());
+        settings.put("GrassEnergy", energyOfGrassField.getValue());
+        settings.put("GenomeLength", genomeLengthField.getValue());
+        settings.put("InitAnimalCount", initialAnimalsCountField.getValue());
+        settings.put("ReproductionEnergyRequired", reproductionEnergyRequiredField.getValue());
+        settings.put("ReproductionEnergyThreshold", reproductionEnergyThresholdField.getValue());
+        settings.put("MaxMutationsCount", reproductionMutationsMaxField.getValue());
+        settings.put("MinMutationsCount", reproductionMutationsMinField.getValue());
+        ConfigWriter configWriter = new ConfigWriter();
+        if (ConfigName.getText().isEmpty()) {
+            addErrorLabel(saveConfigButton, "No file name");
+            return;
+        }
+        if (!configWriter.writeConfigToFile(settings, ConfigName.getText())) {
+            addErrorLabel(saveConfigButton, "File already exists");
+        }
+    }
+
+    @FXML
+    public void readConfigs() {
+        ConfigReader configReader = new ConfigReader();
+        ConfigOptions.getItems().addAll(configReader.getConfigs());
+
+    }
+
+    @FXML
+    public void loadConfig() {
+        if (ConfigOptions.getValue() == null) {
+            addErrorLabel(ConfigOptions, "No file selected");
+            return;
+        }
+        ConfigReader configReader = new ConfigReader();
+        HashMap<String, Integer> config = configReader.readFile(ConfigOptions.getValue().toString());
+        alternatingGenomesCheckbox.setSelected(false);
+        if (config.get("IsAlternating") == 1) {
+            alternatingGenomesCheckbox.setSelected(true);
+        }
+        wrappingWorldCheckbox.setSelected(false);
+        if (config.get("IsWrapping") == 1) {
+            wrappingWorldCheckbox.setSelected(true);
+        }
+        equatorCheckbox.setSelected(false);
+        if (config.get("HasEquator") == 1) {
+            equatorCheckbox.setSelected(true);
+        }
+        mapHeightField.getValueFactory().setValue(config.get("MapHeight"));
+        mapWidthField.getValueFactory().setValue(config.get("MapWidth"));
+        tunnelsCountField.getValueFactory().setValue(config.get("HolesCount"));
+        initialGrassCountField.getValueFactory().setValue(config.get("InitGrassCount"));
+        grassGrownEachIterationField.getValueFactory().setValue(config.get("GrassGrownCount"));
+        energyOfGrassField.getValueFactory().setValue(config.get("GrassEnergy"));
+        genomeLengthField.getValueFactory().setValue(config.get("GenomeLength"));
+        initialAnimalsCountField.getValueFactory().setValue(config.get("InitAnimalCount"));
+        reproductionEnergyThresholdField.getValueFactory().setValue(config.get("ReproductionEnergyThreshold"));
+        reproductionEnergyRequiredField.getValueFactory().setValue(config.get("ReproductionEnergyRequired"));
+        reproductionMutationsMinField.getValueFactory().setValue(config.get("MinMutationsCount"));
+        reproductionMutationsMaxField.getValueFactory().setValue(config.get("MaxMutationsCount"));
+        initialAnimalEnergyField.getValueFactory().setValue(config.get("InitEnergyCount"));
     }
 }
