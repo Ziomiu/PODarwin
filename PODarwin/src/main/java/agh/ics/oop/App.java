@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -33,7 +34,7 @@ public class App extends Application {
     private void configurePrimaryStage(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
-        BorderPane viewRoot = loader.load();
+        HBox viewRoot = loader.load();
         simulationPresenter = loader.getController();
         Scene scene = new Scene(viewRoot);
         primaryStage.setTitle("Simulation");

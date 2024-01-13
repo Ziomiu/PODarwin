@@ -39,9 +39,9 @@
     <HBox prefHeight="40" alignment="CENTER_LEFT">
         <Label text="Map size:"/>
         <Region prefWidth="32"/>
-        <Spinner fx:id="mapWidthField" min="1" max="100" prefWidth="80"/>
+        <Spinner fx:id="mapWidthField" min="10" max="100" prefWidth="80"/>
         <Text text=" by "/>
-        <Spinner fx:id="mapHeightField" min="1" max="100" prefWidth="80"/>
+        <Spinner fx:id="mapHeightField" min="10" max="100" prefWidth="80"/>
     </HBox>
 
     <HBox prefHeight="40" alignment="CENTER_LEFT">
