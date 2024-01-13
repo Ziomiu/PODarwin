@@ -5,13 +5,15 @@ import agh.ics.oop.presenter.SimulationPresenter;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class App extends Application {
     private SimulationConfigPresenter configPresenter;
     private SimulationPresenter simulationPresenter;
+    private Stage primaryStage;
     private final Simulation simulation;
 
     public App() {
@@ -20,17 +22,19 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        this.primaryStage = primaryStage;
         configurePrimaryStage(primaryStage);
-        configureConfigWindow();
+        configureConfigStage();
     }
 
     private void configurePrimaryStage(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
-        BorderPane viewRoot = loader.load();
+        HBox viewRoot = loader.load();
         simulationPresenter = loader.getController();
+        simulationPresenter.getMapChangeSubscribers().forEach(simulation::addMapChangeSubscriber);
+        simulationPresenter.getGlobalStatsSubscribers().forEach(simulation::addGlobalStatsSubscriber);
         Scene scene = new Scene(viewRoot);
-
         primaryStage.setTitle("Simulation");
         primaryStage.minWidthProperty().bind(viewRoot.minWidthProperty());
         primaryStage.minHeightProperty().bind(viewRoot.minHeightProperty());
@@ -38,17 +42,20 @@ public class App extends Application {
         primaryStage.show();
     }
 
-    private void configureConfigWindow() throws Exception {
+    private void configureConfigStage() throws Exception {
         Stage configStage = new Stage();
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("config.fxml"));
-        GridPane viewRoot = loader.load();
+        VBox viewRoot = loader.load();
         configPresenter = loader.getController();
-        configPresenter.addConfigSubmittedSubscriber(simulation::runOnLayers);
+        configPresenter.addLayersReadySubscriber(simulation::runOnLayers);
         configStage.minWidthProperty().bind(viewRoot.minWidthProperty());
         configStage.minHeightProperty().bind(viewRoot.minHeightProperty());
         configStage.setScene(new Scene(viewRoot));
         configStage.setTitle("Set up the simulation");
+        configStage.initOwner(primaryStage);
+        configStage.initModality(Modality.APPLICATION_MODAL);
+        configStage.setOnCloseRequest((var e) -> primaryStage.close());
         configStage.show();
     }
 }

@@ -2,6 +2,7 @@ package agh.ics.oop.model.classes;
 
 import agh.ics.oop.model.enums.Genome;
 import agh.ics.oop.utils.Pair;
+import javafx.scene.paint.Color;
 
 import java.util.HashSet;
 import java.util.List;
@@ -41,8 +42,8 @@ public class Animal implements WorldElement, Drawable {
     }
 
     @Override
-    public void draw() {
-        // todo
+    public Color getColor() {
+        return Color.BROWN;
     }
 
     public void setPosition(Vector2D newPosition) {

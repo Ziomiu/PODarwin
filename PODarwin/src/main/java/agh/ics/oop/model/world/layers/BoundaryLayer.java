@@ -4,7 +4,7 @@ import agh.ics.oop.model.classes.Animal;
 import agh.ics.oop.model.classes.Boundary;
 import agh.ics.oop.model.classes.Vector2D;
 import agh.ics.oop.model.enums.Genome;
-import agh.ics.oop.model.world.phases.DisplayPhase;
+import agh.ics.oop.model.world.phases.SummaryPhase;
 import agh.ics.oop.model.world.phases.GrowGrassPhase;
 import agh.ics.oop.model.world.phases.InitPhase;
 import agh.ics.oop.model.world.phases.MovePhase;
@@ -52,7 +52,7 @@ public class BoundaryLayer extends AbstractLayer {
     }
 
     @Override
-    public void handle(DisplayPhase phase) {
+    public void handle(SummaryPhase phase) {
         phase.setMapBoundary(boundary);
     }
 }

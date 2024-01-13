@@ -1,5 +1,7 @@
 package agh.ics.oop.model.classes;
 
+import javafx.scene.paint.Color;
+
 public interface Drawable {
-    void draw();
+    Color getColor();
 }

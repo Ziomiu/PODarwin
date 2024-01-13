@@ -10,6 +10,6 @@ public record ReproductionParams(
         return reproductionEnergyThreshold > 0
            && reproductionEnergyRequired > 0
            && reproductionMutationMin >= 0
-           && reproductionMutationMax > reproductionMutationMin;
+           && reproductionMutationMax >= reproductionMutationMin;
     }
 }

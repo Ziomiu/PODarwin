@@ -15,7 +15,7 @@ public interface MapLayer {
 
     default void handle(GrowGrassPhase phase) {}
 
-    default void handle(DisplayPhase phase) {}
+    default void handle(SummaryPhase phase) {}
 
     MapLayer getNext();
 

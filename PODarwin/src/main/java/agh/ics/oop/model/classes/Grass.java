@@ -1,5 +1,7 @@
 package agh.ics.oop.model.classes;
 
+import javafx.scene.paint.Color;
+
 public class Grass implements WorldElement, Drawable {
     private final Vector2D position;
     private final int energy;
@@ -15,8 +17,8 @@ public class Grass implements WorldElement, Drawable {
     }
 
     @Override
-    public void draw() {
-        // todo
+    public Color getColor() {
+        return Color.GREEN;
     }
 
     public int getEnergy() {

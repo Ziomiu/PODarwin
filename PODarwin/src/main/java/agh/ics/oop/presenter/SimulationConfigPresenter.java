@@ -6,12 +6,13 @@ import agh.ics.oop.model.classes.Vector2D;
 import agh.ics.oop.model.world.WorldLayersBuilder;
 import agh.ics.oop.model.world.layers.MapLayer;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -25,43 +26,49 @@ public class SimulationConfigPresenter {
     @FXML
     public CheckBox equatorCheckbox;
     @FXML
-    public TextField mapWidthField;
+    public Spinner<Integer> mapWidthField;
     @FXML
-    public TextField mapHeightField;
+    public Spinner<Integer> mapHeightField;
     @FXML
-    public TextField tunnelsCountField;
+    public Spinner<Integer> tunnelsCountField;
     @FXML
-    public TextField initialGrassCountField;
+    public Spinner<Integer> initialGrassCountField;
     @FXML
-    public TextField grassGrownEachIterationField;
+    public Spinner<Integer> grassGrownEachIterationField;
     @FXML
-    public TextField initialAnimalEnergyField;
+    public Spinner<Integer> initialAnimalEnergyField;
     @FXML
-    public TextField energyOfGrassField;
+    public Spinner<Integer> energyOfGrassField;
     @FXML
-    public TextField genomeLengthField;
+    public Spinner<Integer> genomeLengthField;
     @FXML
-    public TextField initialAnimalsCountField;
+    public Spinner<Integer> initialAnimalsCountField;
     @FXML
-    public TextField reproductionEnergyThresholdField;
+    public Spinner<Integer> reproductionEnergyThresholdField;
     @FXML
-    public TextField reproductionEnergyRequiredField;
+    public Spinner<Integer> reproductionEnergyRequiredField;
     @FXML
-    public TextField reproductionMutationsMinField;
+    public Spinner<Integer> reproductionMutationsMinField;
     @FXML
-    public TextField reproductionMutationsMaxField;
+    public Spinner<Integer> reproductionMutationsMaxField;
     @FXML
     public Button startValidateButton;
 
+    List<Node> errorLabels;
+
     public SimulationConfigPresenter() {
         configSubmittedSubscribers = new ArrayList<>();
+        errorLabels = new LinkedList<>();
     }
 
     @FXML
     public void initialize() {
         startValidateButton.setOnMouseClicked(event -> {
+            clearErrorLabels();
+
             WorldLayersBuilder builder = new WorldLayersBuilder();
             boolean ok = true;
+
             if (alternatingGenomesCheckbox.isSelected()) {
                 builder.withAlternatingGenomes();
             }
@@ -70,82 +77,49 @@ public class SimulationConfigPresenter {
                 builder.withWrappingWorld();
             }
 
-            try {
-                builder.withBoundary(new Boundary(
-                    new Vector2D(0, 0),
-                    new Vector2D(
-                        Integer.parseInt(mapWidthField.textProperty().get()),
-                        Integer.parseInt(mapHeightField.textProperty().get())
-                    )
-                ));
-            } catch (Exception e) {
+            Boundary worldBoundary = new Boundary(
+                new Vector2D(0, 0),
+                new Vector2D(
+                    mapWidthField.getValue(),
+                    mapHeightField.getValue()
+                )
+            );
+            builder.withBoundary(worldBoundary);
+
+            int fieldsLeft = worldBoundary.numberOfFields();
+            if (tunnelsCountField.getValue() > fieldsLeft) {
+                addErrorLabel(tunnelsCountField, "Not enough fields");
                 ok = false;
-                mapWidthField.textProperty().set("");
-                mapHeightField.textProperty().set("");
+            } else if (ok) {
+                builder.withTunnels(tunnelsCountField.getValue());
+                fieldsLeft -= tunnelsCountField.getValue();
             }
 
-            try {
-                builder.withTunnels(Integer.parseInt(tunnelsCountField.textProperty().get()));
-            } catch (Exception e) {
+            if (initialGrassCountField.getValue() > fieldsLeft) {
+                addErrorLabel(initialGrassCountField, "Not enough fields");
                 ok = false;
-                tunnelsCountField.textProperty().get();
+            } else if (ok) {
+                builder.withInitialGrassCount(initialGrassCountField.getValue());
+                initialGrassCountField.getValue();
             }
 
-            try {
-                builder.withInitialGrassCount(Integer.parseInt(initialGrassCountField.textProperty().get()));
-            } catch (Exception e) {
-                ok = false;
-                initialGrassCountField.textProperty().get();
-            }
+            builder
+                .withGrassGrownEachIteration(grassGrownEachIterationField.getValue())
+                .withInitialAnimalsEnergy(initialAnimalEnergyField.getValue())
+                .withEnergyOfGrass(energyOfGrassField.getValue())
+                .withGenomeLength(genomeLengthField.getValue())
+                .withInitialAnimalCount(initialAnimalsCountField.getValue());
 
-            try {
-                builder.withGrassGrownEachIteration(Integer.parseInt(grassGrownEachIterationField.textProperty().get()));
-            } catch (Exception e) {
+            if (reproductionMutationsMaxField.getValue() < reproductionMutationsMinField.getValue()) {
+                addErrorLabel(reproductionMutationsMaxField, "Max < Min");
                 ok = false;
-                grassGrownEachIterationField.textProperty().get();
-            }
-
-            try {
-                builder.withInitialAnimalsEnergy(Integer.parseInt(initialAnimalEnergyField.textProperty().get()));
-            } catch (Exception e) {
-                ok = false;
-                initialAnimalEnergyField.textProperty().get();
-            }
-
-            try {
-                builder.withEnergyOfGrass(Integer.parseInt(energyOfGrassField.textProperty().get()));
-            } catch (Exception e) {
-                ok = false;
-                energyOfGrassField.textProperty().get();
-            }
-
-            try {
-                builder.withGenomeLength(Integer.parseInt(genomeLengthField.textProperty().get()));
-            } catch (Exception e) {
-                ok = false;
-                genomeLengthField.textProperty().get();
-            }
-
-            try {
-                builder.withInitialAnimalCount(Integer.parseInt(initialAnimalsCountField.textProperty().get()));
-            } catch (Exception e) {
-                ok = false;
-                initialAnimalsCountField.textProperty().get();
-            }
-
-            try {
+            } else if (ok) {
                 builder.withReproductionParams(new ReproductionParams(
-                    Integer.parseInt(reproductionEnergyThresholdField.textProperty().get()),
-                    Integer.parseInt(reproductionEnergyRequiredField.textProperty().get()),
-                    Integer.parseInt(reproductionMutationsMinField.textProperty().get()),
-                    Integer.parseInt(reproductionMutationsMaxField.textProperty().get())
+                    reproductionEnergyThresholdField.getValue(),
+                    reproductionEnergyRequiredField.getValue(),
+                    reproductionMutationsMinField.getValue(),
+                    reproductionMutationsMaxField.getValue()
                 ));
-            } catch (Exception e) {
-                ok = false;
-                reproductionEnergyThresholdField.textProperty().set("");
-                reproductionEnergyRequiredField.textProperty().set("");
-                reproductionMutationsMinField.textProperty().set("");
-                reproductionMutationsMaxField.textProperty().set("");
             }
 
             if (ok) {
@@ -160,7 +134,20 @@ public class SimulationConfigPresenter {
         });
     }
 
-    public void addConfigSubmittedSubscriber(Consumer<MapLayer> subscriber) {
+    public void addLayersReadySubscriber(Consumer<MapLayer> subscriber) {
         configSubmittedSubscribers.add(subscriber);
+    }
+
+    private void addErrorLabel(Node input, String message) {
+        Label errorLabel = new Label(message);
+        errorLabel.setStyle("-fx-text-fill: red;");
+        errorLabel.setPadding(new Insets(0, 0, 0, 10));
+        ((HBox)input.getParent()).getChildren().add(errorLabel);
+        errorLabels.add(errorLabel);
+    }
+
+    private void clearErrorLabels() {
+        errorLabels.forEach((var node) -> ((HBox)node.getParent()).getChildren().remove(node));
+        errorLabels.clear();
     }
 }
