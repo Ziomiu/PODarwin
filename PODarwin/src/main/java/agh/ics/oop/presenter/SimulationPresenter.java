@@ -18,11 +18,6 @@ public class SimulationPresenter {
     @FXML
     MapView mapView;
 
-    @FXML
-    public void initialize() {
-        System.out.println("initialize");
-    }
-
     public List<MapChangeSubscriber> getMapChangeSubscribers() {
         return List.of(mapView);
     }

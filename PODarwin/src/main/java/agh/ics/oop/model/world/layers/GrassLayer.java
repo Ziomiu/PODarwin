@@ -3,7 +3,7 @@ package agh.ics.oop.model.world.layers;
 import agh.ics.oop.model.classes.Boundary;
 import agh.ics.oop.model.classes.Grass;
 import agh.ics.oop.model.classes.Vector2D;
-import agh.ics.oop.model.classes.factory.GrassFactory;
+import agh.ics.oop.service.GrassFactory;
 import agh.ics.oop.model.world.phases.*;
 import agh.ics.oop.utils.PositionsRange;
 

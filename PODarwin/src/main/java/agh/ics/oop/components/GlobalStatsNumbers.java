@@ -2,7 +2,7 @@ package agh.ics.oop.components;
 
 import agh.ics.oop.model.visualization.GlobalStatsEvent;
 import agh.ics.oop.model.visualization.StatsSubscriber;
-import javafx.geometry.Insets;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
@@ -47,18 +47,22 @@ public class GlobalStatsNumbers extends FlowPane implements StatsSubscriber<Glob
         label.setStyle("-fx-font-size: 2em;");
         Label titleLabel = new Label(title);
         titleLabel.setWrapText(true);
-        box.getChildren().addAll(label, titleLabel);
+        Platform.runLater(() -> {
+            box.getChildren().addAll(label, titleLabel);
+        });
         return box;
     }
 
     @Override
     public void updateStats(GlobalStatsEvent statsEvent) {
-        totalGrassLabel.setText(String.valueOf(statsEvent.totalGrass()));
-        totalAnimalsLabel.setText(String.valueOf(statsEvent.totalAnimals()));
-        placesLeft.setText(String.valueOf(statsEvent.placesLeft()));
-        mostPopularGenomeLabel.setText(statsEvent.mostPopularGenome());
-        totalTunnelsLabel.setText(String.valueOf(statsEvent.totalTunnels()));
-        averageLifetimeLabel.setText(String.valueOf(statsEvent.averageLifetime()));
-        averageChildrenLabel.setText(String.valueOf(statsEvent.averageChildren()));
+        Platform.runLater(() -> {
+            totalGrassLabel.setText(String.valueOf(statsEvent.totalGrass()));
+            totalAnimalsLabel.setText(String.valueOf(statsEvent.totalAnimals()));
+            placesLeft.setText(String.valueOf(statsEvent.placesLeft()));
+            mostPopularGenomeLabel.setText(statsEvent.mostPopularGenome());
+            totalTunnelsLabel.setText(String.valueOf(statsEvent.totalTunnels()));
+            averageLifetimeLabel.setText(String.valueOf(statsEvent.averageLifetime()));
+            averageChildrenLabel.setText(String.valueOf(statsEvent.averageChildren()));
+        });
     }
 }

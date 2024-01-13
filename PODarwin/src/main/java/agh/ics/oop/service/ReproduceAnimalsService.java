@@ -1,7 +1,6 @@
 package agh.ics.oop.service;
 
 import agh.ics.oop.model.classes.*;
-import agh.ics.oop.model.classes.factory.AnimalFactory;
 import agh.ics.oop.model.enums.Genome;
 import agh.ics.oop.utils.AnimalComparator;
 import agh.ics.oop.utils.NumbersRange;

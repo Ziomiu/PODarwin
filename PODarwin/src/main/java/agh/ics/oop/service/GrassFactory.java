@@ -1,4 +1,4 @@
-package agh.ics.oop.model.classes.factory;
+package agh.ics.oop.service;
 
 import agh.ics.oop.model.classes.Grass;
 import agh.ics.oop.model.classes.Vector2D;

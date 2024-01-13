@@ -11,7 +11,7 @@ import agh.ics.oop.model.world.phases.*;
 
 import java.util.*;
 
-public class Simulation {
+public class Simulation implements Runnable {
     private HashMap<Animal, Vector2D> animalMoves;
     private MapLayer firstLayer;
     private final HashSet<Vector2D> permanentlyBlockedFields;
@@ -25,13 +25,25 @@ public class Simulation {
         globalStatsSubscribers = new LinkedList<>();
     }
 
-    public void runOnLayers(MapLayer firstLayer) {
+    public void initializeMapLayers(MapLayer firstLayer) {
         this.firstLayer = firstLayer;
+    }
+
+    public void run() {
+        if (firstLayer == null) {
+            return;
+        }
+
         bootstrapSimulation();
 
-        for (var i = 0; i < 100; i++) {
-            System.out.printf("===== day %d =====%n", i);
-            advanceSimulation();
+        try {
+            for (var i = 0; i < 100; i++) {
+                System.out.printf("===== day %d =====%n", i);
+                advanceSimulation();
+                Thread.sleep(500);
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
