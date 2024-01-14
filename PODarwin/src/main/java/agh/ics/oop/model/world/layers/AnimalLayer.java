@@ -37,7 +37,6 @@ public class AnimalLayer extends AbstractLayer {
 
     @Override
     public void handle(InitPhase phase) {
-        //Animals cant spawn on holes?
         PositionsRange positionsRange = new PositionsRange(
             phase.getMapBoundary(),
             this.initialAnimalsCount, new HashSet<>(phase.getHoles().keySet())
@@ -77,7 +76,6 @@ public class AnimalLayer extends AbstractLayer {
             if (animal.getEnergy() == 0) {
                 removedAnimals.add(animal);
                 deadAnimals.add(animal);
-                System.out.println("Animal died on position " + animal.getPosition());
             }
         }
         animals.removeAll(removedAnimals);

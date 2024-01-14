@@ -1,12 +1,9 @@
 package agh.ics.oop.model.world.layers;
 
 import agh.ics.oop.model.classes.*;
+import agh.ics.oop.model.world.phases.*;
 import agh.ics.oop.service.AnimalFactory;
 import agh.ics.oop.service.GenomeSequenceFactory;
-import agh.ics.oop.model.world.phases.EatPhase;
-import agh.ics.oop.model.world.phases.InitPhase;
-import agh.ics.oop.model.world.phases.MovePhase;
-import agh.ics.oop.model.world.phases.ReproducePhase;
 import agh.ics.oop.service.ReproduceAnimalsService;
 import org.junit.jupiter.api.Test;
 
@@ -153,5 +150,33 @@ class AnimalLayerTest {
         assertEquals(1,animal4.getAnimalStats().getNumOfChildren());
         assertEquals(1,animal3.getAnimalStats().getNumOfChildren());
     }
-
+    @Test
+    void shouldRemoveAnimals(){
+        ReproductionParams reproductionParams = new ReproductionParams(10,1,0,0);
+        GenomeSequenceFactory genomeSequenceFactory = new GenomeSequenceFactory();
+        HashSet<Animal> animals = new HashSet<>();
+        Animal a1 = new Animal(mock(Vector2D.class), mock(GenomeSequence.class), 10);
+        Animal a2 = new Animal(mock(Vector2D.class), mock(GenomeSequence.class), 1);
+        Animal a3 = new Animal(mock(Vector2D.class), mock(GenomeSequence.class), a1, a2, 10);
+        Animal a4 = new Animal(mock(Vector2D.class), mock(GenomeSequence.class), a1, a2, 10);
+        a2.removeEnergy(1);
+        animals.add(a1);
+        animals.add(a2);
+        animals.add(a3);
+        animals.add(a4);
+        CleanupPhase cleanupPhase = new CleanupPhase();
+        AnimalFactory animalFactory = new AnimalFactory(10);
+        AnimalLayer animalLayer = new AnimalLayer(
+            animalFactory,
+            new ReproduceAnimalsService(
+                animalFactory,
+                reproductionParams
+            ),
+            10,
+            () -> genomeSequenceFactory.getRandomOrderedGenome(5)
+        );
+        animalLayer.setAnimals(animals);
+        animalLayer.handle(cleanupPhase);
+        assertEquals(3,animalLayer.getAnimals().size());
+    }
 }

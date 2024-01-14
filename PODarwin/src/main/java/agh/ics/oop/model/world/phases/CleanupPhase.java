@@ -6,7 +6,6 @@ import agh.ics.oop.model.world.layers.MapLayer;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 public class CleanupPhase implements Phase {
     private ArrayList<Animal> removedAnimals = new ArrayList<>();
@@ -17,7 +16,6 @@ public class CleanupPhase implements Phase {
         layer.handle(this);
     }
 
-    // todo: add setter and use it somewhere?
     public ArrayList<Animal> getRemovedAnimals() {
         return removedAnimals;
     }

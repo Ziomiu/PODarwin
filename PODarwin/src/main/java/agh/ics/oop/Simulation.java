@@ -6,7 +6,6 @@ import agh.ics.oop.model.visualization.*;
 import agh.ics.oop.model.world.layers.MapLayer;
 import agh.ics.oop.model.world.phases.*;
 import agh.ics.oop.utils.SingleStatsGenerator;
-import agh.ics.oop.utils.StatsGenerator;
 import javafx.beans.value.ObservableBooleanValue;
 
 import java.util.*;
@@ -48,7 +47,6 @@ public class Simulation implements Runnable {
 
         try {
             while (!endRequested) {
-                System.out.printf("===== day %d =====%n", day);
                 if (pauseRequested) {
                     pauseLatch = new CountDownLatch(1);
                     pauseLatch.await();
@@ -58,8 +56,7 @@ public class Simulation implements Runnable {
                 advanceSimulation();
                 Thread.sleep(500);
             }
-        } catch (InterruptedException e) {
-            // todo: probably came from executorservice, clean up and return
+        } catch (InterruptedException ignored) {
         }
     }
 
@@ -115,7 +112,6 @@ public class Simulation implements Runnable {
         cleanupPhase.getRemovedAnimals().forEach(animalMoves::remove);
 
         GrowGrassPhase growGrassPhase = new GrowGrassPhase();
-        // todo: can we do it better?
         growGrassPhase.setEatenGrass(cleanupPhase.getEatenGrass());
         growGrassPhase.setBlockedFields(permanentlyBlockedFields);
         visitLayers(growGrassPhase);

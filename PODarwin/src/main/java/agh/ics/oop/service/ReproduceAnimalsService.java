@@ -55,7 +55,7 @@ public class ReproduceAnimalsService {
         parent1.removeEnergy(reproductionParams.reproductionEnergyRequired());
         parent2.removeEnergy(reproductionParams.reproductionEnergyRequired());
         List<Genome> newGenome = new ArrayList<>();
-        // Animal gets left part of genes from bigger parent
+        // Animal gets left part of genes from greater parent
         if (genesPart == 1) {
             for (int i = 0; i < numOfGenesFromBiggerParent; i++) {
                 newGenome.add(parent1.getGenes().get(i));
@@ -64,7 +64,7 @@ public class ReproduceAnimalsService {
                 newGenome.add(parent2.getGenes().get(i));
             }
         } else {
-            // Animal gets left part of genes from smaller parent
+            // Animal gets left part of genes from lesser parent
             for (int i = 0; i < numOfGensFromSmallerParent; i++) {
                 newGenome.add(parent1.getGenes().get(i));
             }
@@ -85,7 +85,6 @@ public class ReproduceAnimalsService {
             child.nextGenome();
         }
         animals.add(child);
-        System.out.println("Animal was born on position " + child.getPosition());
         return child;
     }
 

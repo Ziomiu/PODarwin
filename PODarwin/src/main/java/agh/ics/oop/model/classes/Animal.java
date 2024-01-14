@@ -111,7 +111,7 @@ public class Animal implements WorldElement, Drawable {
     }
 
     public boolean isDead() {
-        return animalStats.getDeathDay() != 0;
+        return animalStats.getDeathDay() != -1;
     }
 
     private void updateParentsDescendants(Animal newAnimal) {
