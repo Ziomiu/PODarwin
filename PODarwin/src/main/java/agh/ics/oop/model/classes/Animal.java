@@ -14,6 +14,7 @@ public class Animal implements WorldElement, Drawable {
     private int energy;
     private final GenomeSequence genomeSequence;
     private Genome currentGenome;
+    private Genome effectiveGenome;
     private Pair<Animal> parents;
     private final HashSet<Animal> descendants;
     private final AnimalStats animalStats = new AnimalStats();
@@ -27,6 +28,7 @@ public class Animal implements WorldElement, Drawable {
         }
         this.energy = energy;
         this.currentGenome = genomeSequence.nextInSequence();
+        this.effectiveGenome = this.currentGenome;
         fingerprint = UUID.randomUUID();
         descendants = new HashSet<>();
         if (parent1 != null && parent2 != null) {
@@ -75,15 +77,20 @@ public class Animal implements WorldElement, Drawable {
 
     public Genome nextGenome() {
         currentGenome = genomeSequence.nextInSequence();
+        effectiveGenome = effectiveGenome.applyRotation(currentGenome);
         return currentGenome;
+    }
+
+    public Genome getEffectiveGenome() {
+        return effectiveGenome;
     }
 
     public Genome getCurrentGenome() {
         return currentGenome;
     }
 
-    public void setCurrentGenome(Genome genome) {
-        currentGenome = genome;
+    public void setEffectiveGenome(Genome genome) {
+        effectiveGenome = genome;
     }
 
     public AnimalStats getAnimalStats() {

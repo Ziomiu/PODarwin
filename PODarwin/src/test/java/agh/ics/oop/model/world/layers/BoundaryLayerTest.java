@@ -71,15 +71,15 @@ public class BoundaryLayerTest {
         assertEquals(posSouthWest, movePhase.getNewAnimalMoves().get(animal8));
         assertEquals(posNorthWest, movePhase.getNewAnimalMoves().get(animal9));
 
-        assertEquals(Genome.NORTH_EAST, animal1.getCurrentGenome());
-        assertEquals(Genome.SOUTH, animal2.getCurrentGenome());
-        assertEquals(Genome.WEST, animal3.getCurrentGenome());
-        assertEquals(Genome.NORTH, animal4.getCurrentGenome());
-        assertEquals(Genome.EAST, animal5.getCurrentGenome());
-        assertEquals(Genome.SOUTH_WEST, animal6.getCurrentGenome());
-        assertEquals(Genome.NORTH_WEST, animal7.getCurrentGenome());
-        assertEquals(Genome.NORTH_EAST, animal8.getCurrentGenome());
-        assertEquals(Genome.SOUTH_EAST, animal9.getCurrentGenome());
+        assertEquals(Genome.NORTH_EAST, animal1.getEffectiveGenome());
+        assertEquals(Genome.SOUTH, animal2.getEffectiveGenome());
+        assertEquals(Genome.WEST, animal3.getEffectiveGenome());
+        assertEquals(Genome.NORTH, animal4.getEffectiveGenome());
+        assertEquals(Genome.EAST, animal5.getEffectiveGenome());
+        assertEquals(Genome.SOUTH_WEST, animal6.getEffectiveGenome());
+        assertEquals(Genome.NORTH_WEST, animal7.getEffectiveGenome());
+        assertEquals(Genome.NORTH_EAST, animal8.getEffectiveGenome());
+        assertEquals(Genome.SOUTH_EAST, animal9.getEffectiveGenome());
     }
 
     @Test
@@ -123,14 +123,14 @@ public class BoundaryLayerTest {
         assertEquals(posSouthWest, movePhase.getNewAnimalMoves().get(animal8));
         assertEquals(posNorthWest, movePhase.getNewAnimalMoves().get(animal9));
 
-        assertEquals(Genome.NORTH_EAST, animal1.getCurrentGenome());
-        assertEquals(Genome.SOUTH, animal2.getCurrentGenome());
-        assertEquals(Genome.EAST, animal3.getCurrentGenome());
-        assertEquals(Genome.NORTH, animal4.getCurrentGenome());
-        assertEquals(Genome.WEST, animal5.getCurrentGenome());
-        assertEquals(Genome.SOUTH_WEST, animal6.getCurrentGenome());
-        assertEquals(Genome.NORTH_WEST, animal7.getCurrentGenome());
-        assertEquals(Genome.NORTH_EAST, animal8.getCurrentGenome());
-        assertEquals(Genome.SOUTH_EAST, animal9.getCurrentGenome());
+        assertEquals(Genome.NORTH_EAST, animal1.getEffectiveGenome());
+        assertEquals(Genome.SOUTH, animal2.getEffectiveGenome());
+        assertEquals(Genome.EAST, animal3.getEffectiveGenome());
+        assertEquals(Genome.NORTH, animal4.getEffectiveGenome());
+        assertEquals(Genome.WEST, animal5.getEffectiveGenome());
+        assertEquals(Genome.SOUTH_WEST, animal6.getEffectiveGenome());
+        assertEquals(Genome.NORTH_WEST, animal7.getEffectiveGenome());
+        assertEquals(Genome.NORTH_EAST, animal8.getEffectiveGenome());
+        assertEquals(Genome.SOUTH_EAST, animal9.getEffectiveGenome());
     }
 }

@@ -14,7 +14,8 @@ public class MoveAnimalService {
             animal.setPosition(moves.get(animal));
             animal.removeEnergy(1);
             animal.getAnimalStats().increaseAge();
-            animalMoves.put(animal, animal.getPosition().add(animal.nextGenome().toUnitVector()));
+            animal.nextGenome();
+            animalMoves.put(animal, animal.getPosition().add(animal.getEffectiveGenome().toUnitVector()));
         }
         return animalMoves;
     }
