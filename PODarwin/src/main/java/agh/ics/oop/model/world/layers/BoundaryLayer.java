@@ -33,7 +33,7 @@ public class BoundaryLayer extends AbstractLayer {
             }
 
             if (!wrapWorld || !boundary.containsVertical(pos)) {
-                animal.setCurrentGenome(animal.getCurrentGenome().applyRotation(Genome.SOUTH));
+                animal.setEffectiveGenome(animal.getEffectiveGenome().applyRotation(Genome.SOUTH));
                 moves.put(animal, animal.getPosition());
                 continue;
             }
