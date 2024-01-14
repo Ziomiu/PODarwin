@@ -74,17 +74,31 @@ public class SimulationPresenter {
     }
 
     private void registerMapHighlight() {
-        var highlightProperty = pausedView.getHighlightProperty();
-        highlightProperty.addListener(e -> {
-            if (highlightProperty.get()) {
+        var highlightGrassProperty = pausedView.getHighlightGrassProperty();
+        highlightGrassProperty.addListener(e -> {
+            if (highlightGrassProperty.get()) {
                 mapView.highlightPreferredGrassFields();
             } else {
-                mapView.clearHighlight();
+                mapView.clearGrassContext();
             }
         });
         pauseState.addListener(e -> {
             if (pauseState.get()) {
-                pausedView.getHighlightProperty().set(false);
+                pausedView.getHighlightGrassProperty().set(false);
+            }
+        });
+
+        var highlightGenomeProperty = pausedView.getHighlightGenomeProperty();
+        highlightGenomeProperty.addListener(e -> {
+            if (highlightGenomeProperty.get()) {
+                mapView.highlightPreferredGenomeFields();
+            } else {
+                mapView.clearAnimalContext();
+            }
+        });
+        pauseState.addListener(e -> {
+            if (pauseState.get()) {
+                pausedView.getHighlightGenomeProperty().set(false);
             }
         });
     }

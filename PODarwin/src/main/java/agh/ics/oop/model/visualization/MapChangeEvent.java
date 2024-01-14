@@ -10,6 +10,7 @@ public record MapChangeEvent(
     Boundary preferredGrassFields,
     Set<Animal> animals,
     Set<Grass> grass,
-    Set<Hole> tunnels
+    Set<Hole> tunnels,
+    String mostPopularGenome
 ) {
 }
