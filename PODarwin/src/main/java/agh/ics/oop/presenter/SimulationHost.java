@@ -2,6 +2,7 @@ package agh.ics.oop.presenter;
 
 import agh.ics.oop.Simulation;
 import agh.ics.oop.model.world.layers.MapLayer;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
@@ -12,18 +13,20 @@ import javafx.stage.Stage;
 import java.util.function.Consumer;
 
 public class SimulationHost {
-    private SimulationConfigPresenter configPresenter;
-    private SimulationPresenter simulationPresenter;
+    private final Stage configStage;
+    private final Stage simulationStage;
     private final Simulation simulation;
     private Consumer<Runnable> simulationStartHandler;
     private final int id;
 
     public SimulationHost(int id) {
+        configStage = new Stage();
+        simulationStage = new Stage();
         simulation = new Simulation();
         this.id = id;
     }
 
-    public void setSimulationStartHandler(Consumer<Runnable> handler) {
+    public void setOnSimulationStart(Consumer<Runnable> handler) {
         simulationStartHandler = handler;
     }
 
@@ -34,12 +37,25 @@ public class SimulationHost {
         configStage.show();
     }
 
+    public void endSimulation() {
+        System.out.println("Requested end");
+        Platform.runLater(() -> {
+            if (configStage.isShowing()) {
+                configStage.close();
+            }
+            if (simulationStage.isShowing()) {
+                simulationStage.close();
+            }
+        });
+
+        simulation.requestEnd();
+    }
+
     private Stage getPrimaryStage() throws Exception {
         FXMLLoader loader = new FXMLLoader();
-        Stage simulationStage = new Stage();
         loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
         HBox viewRoot = loader.load();
-        simulationPresenter = loader.getController();
+        SimulationPresenter simulationPresenter = loader.getController();
 
         simulation.setPauseState(simulationPresenter.getPauseState());
         simulationPresenter.getMapChangeSubscribers().forEach(simulation::addMapChangeSubscriber);
@@ -52,30 +68,33 @@ public class SimulationHost {
         simulationStage.minWidthProperty().bind(viewRoot.minWidthProperty());
         simulationStage.minHeightProperty().bind(viewRoot.minHeightProperty());
         simulationStage.setScene(scene);
+        simulationStage.setOnCloseRequest((var e) -> simulation.requestEnd());
         return simulationStage;
     }
 
     private Stage getConfigStage(Stage simulationStage) throws Exception {
         FXMLLoader loader = new FXMLLoader();
-        Stage configStage = new Stage();
         loader.setLocation(getClass().getClassLoader().getResource("config.fxml"));
         VBox viewRoot = loader.load();
-        configPresenter = loader.getController();
-
-        configPresenter.addLayersReadySubscriber((MapLayer firstLayer) -> {
-            simulation.initializeMapLayers(firstLayer);
-            if (simulationStartHandler != null) {
-                simulationStartHandler.accept(simulation);
-            }
-        });
+        SimulationConfigPresenter configPresenter = loader.getController();
+        configPresenter.addLayersReadySubscriber(this::acceptLayersReadyHandler);
 
         configStage.minWidthProperty().bind(viewRoot.minWidthProperty());
         configStage.minHeightProperty().bind(viewRoot.minHeightProperty());
         configStage.setScene(new Scene(viewRoot));
         configStage.setTitle("Set up the simulation");
         configStage.initOwner(simulationStage);
-        configStage.initModality(Modality.APPLICATION_MODAL);
-        configStage.setOnCloseRequest((var e) -> simulationStage.close());
+        configStage.initModality(Modality.WINDOW_MODAL);
+        configStage.setOnCloseRequest((var e) -> {
+            Platform.runLater(simulationStage::close);
+        });
         return configStage;
+    }
+
+    private void acceptLayersReadyHandler(MapLayer layer) {
+        simulation.initializeMapLayers(layer);
+        if (simulationStartHandler != null) {
+            simulationStartHandler.accept(simulation);
+        }
     }
 }

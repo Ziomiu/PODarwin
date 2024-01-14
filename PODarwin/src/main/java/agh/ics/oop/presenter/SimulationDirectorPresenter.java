@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class SimulationDirectorPresenter {
     @FXML
@@ -29,18 +30,32 @@ public class SimulationDirectorPresenter {
         executorService = Executors.newFixedThreadPool(4);
         simulationHosts = new HashMap<>();
         addSimulationButton.setOnMouseClicked((var e) -> {
-            if (hintLabel.getParent() != null) {
-                ((AnchorPane)hintLabel.getParent()).getChildren().remove(hintLabel);
-            }
+            hideHintIfVisible();
 
             SimulationHost host = addNewSimulationHost();
             try {
                 host.bootstrap();
-                host.setSimulationStartHandler(executorService::submit);
+                host.setOnSimulationStart(executorService::submit);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
         });
+    }
+
+    public void closeGracefully() {
+        simulationHosts.values().forEach(SimulationHost::endSimulation);
+
+        Thread executorShutdownThread = new Thread(() -> {
+            try {
+                executorService.shutdown();
+                if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) {
+                    executorService.shutdownNow();
+                }
+            } catch (InterruptedException ignored) {
+                executorService.shutdownNow();
+            }
+        });
+        executorShutdownThread.start();
     }
 
     private SimulationHost addNewSimulationHost() {
@@ -50,5 +65,13 @@ public class SimulationDirectorPresenter {
         simulationHosts.put(index, simulationHost);
         index++;
         return simulationHost;
+    }
+
+    private void hideHintIfVisible() {
+        if (hintLabel.getParent() == null) {
+            return;
+        }
+
+        ((AnchorPane)hintLabel.getParent()).getChildren().remove(hintLabel);
     }
 }
