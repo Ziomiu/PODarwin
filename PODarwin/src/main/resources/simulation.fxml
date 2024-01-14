@@ -5,7 +5,6 @@
 <?import agh.ics.oop.components.GlobalStatsNumbers?>
 <?import agh.ics.oop.components.CoverageGraph?>
 <?import agh.ics.oop.components.MapView?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Button?>
 <?import agh.ics.oop.components.AnimalStatsNumbers?>
 <HBox xmlns="http://javafx.com/javafx"
@@ -15,7 +14,7 @@
     <VBox prefWidth="440.0" spacing="10">
         <GlobalStatsNumbers fx:id="globalStatsNumbers"/>
         <CoverageGraph fx:id="coverageGraph"/>
-        <AnimalStatsNumbers VBox.vgrow="ALWAYS" style="-fx-border-radius: 1em; -fx-border-color: #d9d9d9"/>
+        <AnimalStatsNumbers fx:id="animalStats" VBox.vgrow="ALWAYS" style="-fx-border-radius: 1em; -fx-border-color: #d9d9d9"/>
         <HBox alignment="CENTER">
             <Button
                     fx:id="pauseButton"
