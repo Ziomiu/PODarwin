@@ -5,6 +5,7 @@ import agh.ics.oop.model.classes.Vector2D;
 import agh.ics.oop.model.visualization.*;
 import agh.ics.oop.model.world.layers.MapLayer;
 import agh.ics.oop.model.world.phases.*;
+import agh.ics.oop.utils.SingleStatsGenerator;
 import agh.ics.oop.utils.StatsGenerator;
 import javafx.beans.value.ObservableBooleanValue;
 
@@ -139,9 +140,9 @@ public class Simulation implements Runnable {
         }
 
         if (animalToFollow != null) {
+            SingleStatsGenerator singleStatsGenerator = new SingleStatsGenerator(animalToFollow);
             for (var subscriber : animalStatsSubscribers) {
-                // todo: use animalToFollow
-                subscriber.updateStats(new AnimalStatsEvent("ABCDEFGHI", "A", 100, 12, 1, 2, 20, 20));
+                subscriber.updateStats(singleStatsGenerator.getStats());
             }
         }
     }

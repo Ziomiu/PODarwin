@@ -7,10 +7,7 @@ import com.opencsv.exceptions.CsvValidationException;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +18,9 @@ public class CsvWriter {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Pliki CSV", "*.csv"));
         Stage saveConfigStage = new Stage();
         File selectedFile = fileChooser.showSaveDialog(saveConfigStage);
+        if(containsData(selectedFile)){
+            clearFile(selectedFile);
+        }
         return selectedFile;
     }
 
@@ -52,5 +52,12 @@ public class CsvWriter {
             throw new RuntimeException(e);
         }
         return false;
+    }
+    private void clearFile(File file) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write("");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

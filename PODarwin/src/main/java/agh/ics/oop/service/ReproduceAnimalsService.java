@@ -80,6 +80,10 @@ public class ReproduceAnimalsService {
             parent1,
             parent2
         );
+        int numOfGenomChanges = random.nextInt(child.getGenomeSequence().getAllGenomes().size());
+        for(int i=0;i<=numOfGenomChanges;i++){
+            child.nextGenome();
+        }
         animals.add(child);
         System.out.println("Animal was born on position " + child.getPosition());
         return child;
