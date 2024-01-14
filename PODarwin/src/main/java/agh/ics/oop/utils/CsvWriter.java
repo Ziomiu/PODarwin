@@ -53,6 +53,9 @@ public class CsvWriter {
         }
     }
     private static boolean containsData(File file) {
+        if(!file.exists()){
+            return false;
+        }
         try (CSVReader csvReader = new CSVReader(new FileReader(file))) {
             List<String[]> lines = csvReader.readAll();
             return lines.size() > 1;
