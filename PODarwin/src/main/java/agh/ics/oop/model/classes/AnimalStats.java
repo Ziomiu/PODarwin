@@ -5,7 +5,7 @@ public class AnimalStats {
     private int numOfChildren = 0;
     private int numOfDescendants = 0;
     private int age = 0;
-    private int deathDay = 0;
+    private int deathDay = -1;
 
     public AnimalStats() {
     }

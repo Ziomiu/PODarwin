@@ -99,10 +99,10 @@ public class GrassLayer extends AbstractLayer {
 
     private void findPlacesToGrowGrass(Boundary boundary, int grassOutsideOfEquator, int grassOnEquator,
                                        HashSet<Vector2D> occupiedOutsideOfEquator, HashSet<Vector2D> occupiedOnEquator, int amount) {
-        if (grassOutsideOfEquator >= (int) Math.floor(amount * (1 - this.equatorChance))) {
+        if (grassOutsideOfEquator >= (int) Math.ceil(amount * (1 - this.equatorChance))) {
             //When there is enough place on the equator and outside of it
             if (grassOnEquator >= (int) Math.floor(amount * this.equatorChance)) {
-                growGrass(boundary, (int) Math.floor(amount * (1 - this.equatorChance)),
+                growGrass(boundary, (int) Math.ceil(amount * (1 - this.equatorChance)),
                     (int) Math.floor(amount * this.equatorChance), occupiedOutsideOfEquator, occupiedOnEquator);
                 //When there isn't enough place on the equator, but it is outside of it for grass grown each phase
             } else {

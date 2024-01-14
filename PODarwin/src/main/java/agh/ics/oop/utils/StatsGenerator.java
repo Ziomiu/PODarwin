@@ -6,6 +6,8 @@ import agh.ics.oop.model.enums.Genome;
 import agh.ics.oop.model.visualization.GlobalStatsEvent;
 import agh.ics.oop.model.world.phases.SummaryPhase;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +26,7 @@ public class StatsGenerator {
         int grassCount = summaryPhase.getGrass().size();
         int animalCount = summaryPhase.getAnimals().size();
         int tunnelsCount = summaryPhase.getTunnels().size();
-        int placesLeft = summaryPhase.getMapBoundary().numberOfFields() - tunnelsCount - grassCount - animalCount;
+        int placesLeft = summaryPhase.getMapBoundary().numberOfFields() - tunnelsCount - grassCount;
         double averageEnergy = getAverageEnergy();
         double averageLifeTime = getAverageLifeTime();
         double averageChildren = getAverageChildren();
@@ -33,9 +35,9 @@ public class StatsGenerator {
         stats.add(String.valueOf(animalCount));
         stats.add(String.valueOf(tunnelsCount));
         stats.add(String.valueOf(placesLeft));
-        stats.add(String.valueOf(averageEnergy));
-        stats.add(String.valueOf(averageLifeTime));
-        stats.add(String.valueOf(averageChildren));
+        stats.add(String.valueOf(BigDecimal.valueOf(getAverageEnergy()).setScale(2, RoundingMode.HALF_UP)));
+        stats.add(String.valueOf(BigDecimal.valueOf(getAverageLifeTime()).setScale(2, RoundingMode.HALF_UP)));
+        stats.add(String.valueOf(BigDecimal.valueOf(getAverageChildren()).setScale(2, RoundingMode.HALF_UP)));
         stats.add(averageGenotype);
         return new GlobalStatsEvent(grassCount, animalCount, averageGenotype, tunnelsCount, placesLeft,
             averageLifeTime, averageChildren, averageEnergy);

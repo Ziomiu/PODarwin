@@ -42,6 +42,11 @@ public class SummaryPhase implements Phase {
     }
 
     public void setDeadAnimals(Set<Animal> deadAnimals) {
+        for (Animal animal : deadAnimals) {
+            if (animal.getAnimalStats().getDeathDay() == -1) {
+                animal.getAnimalStats().setDead(day);
+            }
+        }
         this.deadAnimals = deadAnimals;
     }
 
@@ -92,7 +97,7 @@ public class SummaryPhase implements Phase {
     private void writeStats(ArrayList<String> stats) {
         stats.add(0, String.valueOf(day));
         CsvWriter csvWriter = new CsvWriter();
-        csvWriter.writeStatsToFile(stats,statsFile);
+        csvWriter.writeStatsToFile(stats, statsFile);
     }
 
 }
