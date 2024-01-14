@@ -8,6 +8,7 @@ import agh.ics.oop.model.visualization.MapChangeSubscriber;
 import agh.ics.oop.model.visualization.StatsSubscriber;
 import agh.ics.oop.model.world.layers.MapLayer;
 import agh.ics.oop.model.world.phases.*;
+import agh.ics.oop.utils.StatsGenerator;
 
 import java.util.*;
 
@@ -80,6 +81,7 @@ public class Simulation implements Runnable {
         visitLayers(growGrassPhase);
 
         SummaryPhase summaryPhase = new SummaryPhase();
+        summaryPhase.setDay(day);
         visitLayers(summaryPhase);
 
         MapChangeEvent mapChangeEvent = new MapChangeEvent(
@@ -93,9 +95,8 @@ public class Simulation implements Runnable {
         for (var subscriber : mapChangeSubscribers) {
             subscriber.onMapChange(mapChangeEvent);
         }
-
         for (var subscriber : globalStatsSubscribers) {
-            subscriber.updateStats(new GlobalStatsEvent(10, 10, "AAABBBCCCDDD", 10, 10, 10, 10));
+            subscriber.updateStats(summaryPhase.getGlobalStats());
         }
     }
 

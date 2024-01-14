@@ -18,6 +18,7 @@ public class AnimalLayer extends AbstractLayer {
     private final int initialAnimalsCount;
     private HashSet<Grass> eatenGrass;
     private HashSet<Animal> animals;
+    private HashSet<Animal> deadAnimals = new HashSet<>();
     private HashMap<Animal, Vector2D> newbornMoves = new HashMap<>();
 
     public AnimalLayer(
@@ -75,6 +76,7 @@ public class AnimalLayer extends AbstractLayer {
         for (Animal animal : animals) {
             if (animal.getEnergy() == 0) {
                 removedAnimals.add(animal);
+                deadAnimals.add(animal);
                 System.out.println("Animal died on position " + animal.getPosition());
             }
         }
@@ -86,6 +88,7 @@ public class AnimalLayer extends AbstractLayer {
     @Override
     public void handle(SummaryPhase phase) {
         phase.setAnimals(animals);
+        phase.setDeadAnimals(deadAnimals);
     }
 
     public HashSet<Animal> getAnimals() {
