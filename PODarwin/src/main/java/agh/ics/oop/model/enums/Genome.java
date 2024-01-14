@@ -4,6 +4,10 @@ import agh.ics.oop.model.classes.Vector2D;
 
 import java.util.List;
 
+/*
+Genomes, map directions and relative rotations are the same.
+Consecutive genomes should be "applied" to the previous genome by "rotating" it.
+ */
 public enum Genome {
     NORTH,
     NORTH_EAST,

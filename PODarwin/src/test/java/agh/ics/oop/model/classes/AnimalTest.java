@@ -88,4 +88,15 @@ public class AnimalTest {
         assertEquals(Genome.WEST, animal.getCurrentGenome());
         verify(sequenceMock, times(2)).nextInSequence();
     }
+
+    @Test
+    public void shouldGetEffectiveGenome() {
+        var sequenceMock = mock(GenomeSequence.class);
+        when(sequenceMock.nextInSequence()).thenReturn(Genome.NORTH).thenReturn(Genome.WEST).thenReturn(Genome.SOUTH);
+        Animal animal = new Animal(new Vector2D(2, 2), sequenceMock, 10);
+        animal.nextGenome();
+        animal.nextGenome();
+        assertEquals(Genome.EAST, animal.getEffectiveGenome());
+        verify(sequenceMock, times(3)).nextInSequence();
+    }
 }

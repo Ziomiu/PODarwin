@@ -16,7 +16,7 @@ public class SimulationHost {
     private SimulationPresenter simulationPresenter;
     private final Simulation simulation;
     private Consumer<Runnable> simulationStartHandler;
-    private int id;
+    private final int id;
 
     public SimulationHost(int id) {
         simulation = new Simulation();
@@ -41,8 +41,11 @@ public class SimulationHost {
         HBox viewRoot = loader.load();
         simulationPresenter = loader.getController();
 
+        simulation.setPauseState(simulationPresenter.getPauseState());
         simulationPresenter.getMapChangeSubscribers().forEach(simulation::addMapChangeSubscriber);
         simulationPresenter.getGlobalStatsSubscribers().forEach(simulation::addGlobalStatsSubscriber);
+        simulationPresenter.getAnimalChangeSubscribers().forEach(simulation::addAnimalStatsSubscriber);
+        simulationPresenter.setOnAnimalSelected(simulation::setAnimalToFollow);
 
         Scene scene = new Scene(viewRoot);
         simulationStage.setTitle("Simulation #%d".formatted(id));

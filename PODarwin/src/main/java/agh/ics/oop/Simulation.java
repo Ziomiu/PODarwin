@@ -2,15 +2,14 @@ package agh.ics.oop;
 
 import agh.ics.oop.model.classes.Animal;
 import agh.ics.oop.model.classes.Vector2D;
-import agh.ics.oop.model.visualization.GlobalStatsEvent;
-import agh.ics.oop.model.visualization.MapChangeEvent;
-import agh.ics.oop.model.visualization.MapChangeSubscriber;
-import agh.ics.oop.model.visualization.StatsSubscriber;
+import agh.ics.oop.model.visualization.*;
 import agh.ics.oop.model.world.layers.MapLayer;
 import agh.ics.oop.model.world.phases.*;
 import agh.ics.oop.utils.StatsGenerator;
+import javafx.beans.value.ObservableBooleanValue;
 
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 
 public class Simulation implements Runnable {
     private HashMap<Animal, Vector2D> animalMoves;
@@ -18,13 +17,20 @@ public class Simulation implements Runnable {
     private final HashSet<Vector2D> permanentlyBlockedFields;
     private final List<MapChangeSubscriber> mapChangeSubscribers;
     private final List<StatsSubscriber<GlobalStatsEvent>> globalStatsSubscribers;
+    private final List<StatsSubscriber<AnimalStatsEvent>> animalStatsSubscribers;
     private int day = 0;
+    private ObservableBooleanValue pauseState;
+    private boolean pauseRequested = false;
+    private CountDownLatch pauseLatch;
+    private Animal animalToFollow;
 
     public Simulation() {
+        pauseLatch = new CountDownLatch(0);
         animalMoves = new HashMap<>();
         permanentlyBlockedFields = new HashSet<>();
         mapChangeSubscribers = new LinkedList<>();
         globalStatsSubscribers = new LinkedList<>();
+        animalStatsSubscribers = new LinkedList<>();
     }
 
     public void initializeMapLayers(MapLayer firstLayer) {
@@ -39,9 +45,14 @@ public class Simulation implements Runnable {
         bootstrapSimulation();
 
         try {
-            for (var i = 0; i < 100; i++) {
-                day++;
+            while (true) {
                 System.out.printf("===== day %d =====%n", day);
+                if (pauseRequested) {
+                    pauseLatch = new CountDownLatch(1);
+                    pauseLatch.await();
+                }
+
+                day++;
                 advanceSimulation();
                 Thread.sleep(500);
             }
@@ -56,6 +67,28 @@ public class Simulation implements Runnable {
 
     public void addGlobalStatsSubscriber(StatsSubscriber<GlobalStatsEvent> subscriber) {
         globalStatsSubscribers.add(subscriber);
+    }
+
+    public void addAnimalStatsSubscriber(StatsSubscriber<AnimalStatsEvent> subscriber) {
+        animalStatsSubscribers.add(subscriber);
+    }
+
+    public void setPauseState(ObservableBooleanValue observableBooleanValue) {
+        pauseState = observableBooleanValue;
+        pauseState.addListener((var e) -> this.handlePauseStateChange());
+    }
+
+    public void setAnimalToFollow(Animal animal) {
+        animalToFollow = animal;
+    }
+
+    private void handlePauseStateChange() {
+        if (pauseState.get()) {
+            pauseRequested = true;
+        } else {
+            pauseRequested = false;
+            pauseLatch.countDown();
+        }
     }
 
     private void advanceSimulation() {
@@ -97,6 +130,13 @@ public class Simulation implements Runnable {
         }
         for (var subscriber : globalStatsSubscribers) {
             subscriber.updateStats(summaryPhase.getGlobalStats());
+        }
+
+        if (animalToFollow != null) {
+            for (var subscriber : animalStatsSubscribers) {
+                // todo: use animalToFollow
+                subscriber.updateStats(new AnimalStatsEvent("ABCDEFGHI", "A", 100, 12, 1, 2, 20, 20));
+            }
         }
     }
 
