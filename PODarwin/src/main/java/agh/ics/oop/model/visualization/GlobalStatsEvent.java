@@ -7,6 +7,7 @@ public record GlobalStatsEvent(
     int totalTunnels,
     int placesLeft,
     double averageLifetime,
-    double averageChildren
+    double averageChildren,
+    double averageEnergy
 ) {
 }

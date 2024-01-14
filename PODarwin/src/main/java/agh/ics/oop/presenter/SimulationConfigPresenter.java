@@ -7,12 +7,14 @@ import agh.ics.oop.model.world.WorldLayersBuilder;
 import agh.ics.oop.model.world.layers.MapLayer;
 import agh.ics.oop.utils.ConfigReader;
 import agh.ics.oop.utils.ConfigWriter;
+import agh.ics.oop.utils.CsvWriter;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -22,7 +24,7 @@ import java.util.function.Consumer;
 public class SimulationConfigPresenter {
     private final List<Consumer<MapLayer>> configSubmittedSubscribers;
     private HashMap<String, Integer> settings = new HashMap<>();
-
+    private File statsFile = null;
     @FXML
     public CheckBox alternatingGenomesCheckbox;
     @FXML
@@ -59,10 +61,6 @@ public class SimulationConfigPresenter {
     public Button startValidateButton;
     @FXML
     public Button saveConfigButton;
-    @FXML
-    public TextField ConfigName;
-    @FXML
-    public ComboBox ConfigOptions;
     @FXML
     public Button readFileButton;
 
@@ -116,6 +114,9 @@ public class SimulationConfigPresenter {
             } else if (ok) {
                 builder.withInitialGrassCount(initialGrassCountField.getValue());
                 initialGrassCountField.getValue();
+            }
+            if (statsFile != null) {
+                builder.withStatsFile(statsFile);
             }
 
             builder
@@ -195,30 +196,13 @@ public class SimulationConfigPresenter {
         settings.put("MaxMutationsCount", reproductionMutationsMaxField.getValue());
         settings.put("MinMutationsCount", reproductionMutationsMinField.getValue());
         ConfigWriter configWriter = new ConfigWriter();
-        if (ConfigName.getText().isEmpty()) {
-            addErrorLabel(saveConfigButton, "No file name");
-            return;
-        }
-        if (!configWriter.writeConfigToFile(settings, ConfigName.getText())) {
-            addErrorLabel(saveConfigButton, "File already exists");
-        }
-    }
-
-    @FXML
-    public void readConfigs() {
-        ConfigReader configReader = new ConfigReader();
-        ConfigOptions.getItems().addAll(configReader.getConfigs());
-
+        configWriter.openSaveConfigDialog(settings);
     }
 
     @FXML
     public void loadConfig() {
-        if (ConfigOptions.getValue() == null) {
-            addErrorLabel(ConfigOptions, "No file selected");
-            return;
-        }
         ConfigReader configReader = new ConfigReader();
-        HashMap<String, Integer> config = configReader.readFile(ConfigOptions.getValue().toString());
+        HashMap<String, Integer> config = configReader.readConfig();
         alternatingGenomesCheckbox.setSelected(false);
         if (config.get("IsAlternating") == 1) {
             alternatingGenomesCheckbox.setSelected(true);
@@ -244,5 +228,11 @@ public class SimulationConfigPresenter {
         reproductionMutationsMinField.getValueFactory().setValue(config.get("MinMutationsCount"));
         reproductionMutationsMaxField.getValueFactory().setValue(config.get("MaxMutationsCount"));
         initialAnimalEnergyField.getValueFactory().setValue(config.get("InitEnergyCount"));
+    }
+
+    @FXML
+    public void saveStats() {
+        CsvWriter csvWriter = new CsvWriter();
+        statsFile = csvWriter.openSaveStatsDialog();
     }
 }

@@ -7,7 +7,10 @@ import agh.ics.oop.service.GrassFactory;
 import agh.ics.oop.model.world.layers.*;
 import agh.ics.oop.service.ReproduceAnimalsService;
 
+import java.io.File;
+
 public class WorldLayersBuilder {
+    private File statsFile = null;
     private boolean hasAlternatingGenomes = false;
     private boolean hasWrappingWorld = false;
     private boolean hasEquator = false;
@@ -20,6 +23,11 @@ public class WorldLayersBuilder {
     private int genomeLength = 10;
     private int initialAnimalCount = 0;
     private ReproductionParams reproductionParams = null;
+
+    public WorldLayersBuilder withStatsFile(File statsFile) {
+        this.statsFile = statsFile;
+        return this;
+    }
 
     public WorldLayersBuilder withBoundary(Boundary boundary) {
         this.boundary = boundary;
@@ -147,14 +155,16 @@ public class WorldLayersBuilder {
 
         BoundaryLayer boundaryLayer = new BoundaryLayer(boundary, hasWrappingWorld);
         boundaryLayer.setNext(grassLayer);
-
+        if (statsFile != null) {
+            FileLayer fileLayer = new FileLayer(statsFile);
+            animalLayer.setNext(fileLayer);
+        }
         if (initialHoleCount > 0) {
             HoleLayer holeLayer = new HoleLayer(boundary, initialHoleCount);
             holeLayer.setNext(boundaryLayer);
 
             return holeLayer;
         }
-
         return boundaryLayer;
     }
 }

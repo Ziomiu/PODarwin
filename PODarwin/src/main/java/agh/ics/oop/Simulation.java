@@ -5,6 +5,7 @@ import agh.ics.oop.model.classes.Vector2D;
 import agh.ics.oop.model.visualization.*;
 import agh.ics.oop.model.world.layers.MapLayer;
 import agh.ics.oop.model.world.phases.*;
+import agh.ics.oop.utils.StatsGenerator;
 import javafx.beans.value.ObservableBooleanValue;
 
 import java.util.*;
@@ -113,6 +114,7 @@ public class Simulation implements Runnable {
         visitLayers(growGrassPhase);
 
         SummaryPhase summaryPhase = new SummaryPhase();
+        summaryPhase.setDay(day);
         visitLayers(summaryPhase);
 
         MapChangeEvent mapChangeEvent = new MapChangeEvent(
@@ -126,9 +128,8 @@ public class Simulation implements Runnable {
         for (var subscriber : mapChangeSubscribers) {
             subscriber.onMapChange(mapChangeEvent);
         }
-
         for (var subscriber : globalStatsSubscribers) {
-            subscriber.updateStats(new GlobalStatsEvent(10, 10, "AAABBBCCCDDD", 10, 10, 10, 10));
+            subscriber.updateStats(summaryPhase.getGlobalStats());
         }
 
         if (animalToFollow != null) {

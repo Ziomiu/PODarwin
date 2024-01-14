@@ -111,21 +111,26 @@
         <Region prefWidth="32"/>
         <Spinner fx:id="reproductionMutationsMaxField" min="0" max="10" prefWidth="80"/>
     </HBox>
-    <HBox prefHeight="40" alignment="CENTER_LEFT">
+    <HBox prefHeight="20" alignment="CENTER">
         <Button
                 fx:id="saveConfigButton"
-                text="Save Config As:"
+                text="Save Config"
                 onAction="#saveConfig"
         />
-        <TextField fx:id="ConfigName" promptText="Enter file name"/>
     </HBox>
-    <HBox prefHeight="40" alignment="CENTER_LEFT">
+    <HBox prefHeight="20" alignment="CENTER">
+        <Button
+                fx:id="savesStatsButton"
+                text="Save Stats"
+                onAction="#saveStats"
+        />
+    </HBox>
+    <HBox prefHeight="30" alignment="CENTER">
         <Button
                 fx:id="readFileButton"
-                text="Select Config Option:"
+                text="Read Config"
                 onAction="#loadConfig"
         />
-        <ComboBox fx:id="ConfigOptions" onMouseClicked="#readConfigs"/>
     </HBox>
 
     <HBox alignment="CENTER" style="-fx-padding: 2em 0 0 0;">
