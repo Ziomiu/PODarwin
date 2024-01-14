@@ -134,7 +134,9 @@
                 text="Go!"
                 style="
                 -fx-background-color: linear-gradient(to bottom right, #00f42f, #04cf13);
-                -fx-background-radius: 0.4em;
+                -fx-pref-height: 3em;
+                -fx-pref-width: 8em;
+                -fx-background-radius: 2em;
                 -fx-text-fill: white;
                 -fx-font-weight: 800;
                 -fx-font-size: 1.5em;

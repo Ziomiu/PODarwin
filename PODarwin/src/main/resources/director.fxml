@@ -16,11 +16,12 @@
         fx:id="addSimulationButton"
         style="
             -fx-font-size: 1.8em;
+            -fx-text-fill: white;
             -fx-background-color: linear-gradient(to bottom right, #00f42f, #04cf13);
-            -fx-min-width: 2em;
-            -fx-min-height: 2em;
-            -fx-max-width: 2em;
-            -fx-max-height: 2em;
+            -fx-min-width: 2.2em;
+            -fx-min-height: 2.2em;
+            -fx-max-width: 2.2em;
+            -fx-max-height: 2.2em;
             -fx-background-radius: 2em;
         "
         text="+"

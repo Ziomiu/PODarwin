@@ -7,6 +7,8 @@ import agh.ics.oop.model.visualization.GlobalStatsEvent;
 import agh.ics.oop.model.visualization.MapChangeSubscriber;
 import agh.ics.oop.model.visualization.StatsSubscriber;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
 
 import java.util.List;
 
@@ -17,9 +19,11 @@ public class SimulationPresenter {
     CoverageGraph coverageGraph;
     @FXML
     MapView mapView;
+    @FXML
+    Button pauseButton;
 
     public List<MapChangeSubscriber> getMapChangeSubscribers() {
-        return List.of(mapView);
+        return List.of(mapView, coverageGraph);
     }
 
     public List<StatsSubscriber<GlobalStatsEvent>> getGlobalStatsSubscribers() {
