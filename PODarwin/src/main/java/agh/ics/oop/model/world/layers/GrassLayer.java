@@ -21,6 +21,7 @@ public class GrassLayer extends AbstractLayer {
     private final boolean hasEquator;
     private HashSet<Grass> grass = new HashSet<>();
     private HashSet<Grass> equatorGrass = new HashSet<>();
+    private Boundary worldBoundary = null;
     private Boundary equator = null;
     private double equatorChance = 0.8;
 
@@ -57,6 +58,7 @@ public class GrassLayer extends AbstractLayer {
 
     @Override
     public void handle(InitPhase phase) {
+        worldBoundary = phase.getMapBoundary();
         if (!this.hasEquator) {
             phase.setGrasses(this.grass);
             growGrass(phase.getMapBoundary(), this.initialGrassPatchesCount,
@@ -162,6 +164,7 @@ public class GrassLayer extends AbstractLayer {
     @Override
     public void handle(SummaryPhase phase) {
         phase.setGrass(Stream.concat(grass.stream(), equatorGrass.stream()).collect(Collectors.toSet()));
+        phase.setPreferredGrassFields(hasEquator ? equator : worldBoundary);
     }
 
     public HashSet<Grass> getGrass() {

@@ -12,6 +12,7 @@ import java.util.Set;
 
 public class SummaryPhase implements Phase {
     private Boundary mapBoundary = null;
+    private Boundary preferredGrassFields = null;
     private File statsFile = null;
     private Set<Animal> animals = Set.of();
     private Set<Grass> grass = Set.of();
@@ -86,6 +87,14 @@ public class SummaryPhase implements Phase {
         this.day = day;
     }
 
+    public Boundary getPreferredGrassFields() {
+        return preferredGrassFields;
+    }
+
+    public void setPreferredGrassFields(Boundary preferredGrassFields) {
+        this.preferredGrassFields = preferredGrassFields;
+    }
+
     public GlobalStatsEvent getGlobalStats() {
         GlobalStatsEvent globalStatsEvent = statsGenerator.generateStats();
         if (statsFile != null) {
@@ -95,9 +104,7 @@ public class SummaryPhase implements Phase {
     }
 
     private void writeStats(ArrayList<String> stats) {
-        stats.add(0, String.valueOf(day));
         CsvWriter csvWriter = new CsvWriter();
         csvWriter.writeStatsToFile(stats, statsFile);
     }
-
 }

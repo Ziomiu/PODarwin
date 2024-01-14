@@ -7,6 +7,7 @@ import java.util.Set;
 public record MapChangeEvent(
     int day,
     Boundary worldBoundary,
+    Boundary preferredGrassFields,
     Set<Animal> animals,
     Set<Grass> grass,
     Set<Hole> tunnels

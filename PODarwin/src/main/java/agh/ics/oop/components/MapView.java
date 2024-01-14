@@ -22,12 +22,15 @@ import java.util.function.Consumer;
 
 public class MapView extends StackPane implements MapChangeSubscriber {
     private GraphicsContext context;
+    private GraphicsContext helperContext;
     private Set<Animal> animals;
     private HashMap<Vector2D, ArrayList<Animal>> animalsByPosition;
     private Consumer<Animal> animalSelectedEventHandler;
+    int canvasSide = 600;
     int side = 1;
     ObservableBooleanValue pauseState;
     Animal selectedAnimal;
+    Boundary preferredGrassFields;
 
     public MapView() {
         pauseState = new SimpleBooleanProperty(false);
@@ -42,20 +45,42 @@ public class MapView extends StackPane implements MapChangeSubscriber {
         this.pauseState = pauseState;
     }
 
+    public void highlightPreferredGrassFields() {
+        if (preferredGrassFields == null) {
+            return;
+        }
+
+        helperContext.setFill(Color.web("magenta", 0.5));
+        helperContext.fillRect(
+            preferredGrassFields.lower().x() * side,
+            preferredGrassFields.lower().y() * side,
+            preferredGrassFields.width() * side,
+            preferredGrassFields.height() * side
+        );
+    }
+
+    public void clearHighlight() {
+        helperContext.clearRect(0, 0, canvasSide, canvasSide);
+    }
+
     @Override
     public void onMapChange(MapChangeEvent event) {
         Platform.runLater(() -> {
             if (context == null) {
-                prepareCanvas(event.worldBoundary());
+                context = makeGraphicsContext(event.worldBoundary());
+                helperContext = makeGraphicsContext(event.worldBoundary());
             }
 
+            preferredGrassFields = event.preferredGrassFields();
+
+            context.setFill(Color.web("#cfdfa5"));
+            context.fillRect(0, 0, canvasSide, canvasSide);
             animals = event.animals();
             if (animalsByPosition != null) {
                 animalsByPosition.clear();
             }
 
-            context.setFill(Color.web("#cfdfa5"));
-            context.fillRect(0, 0, 600, 600);
+            clearHighlight();
             for (var grass : event.grass()) {
                 context.setFill(grass.getColor());
                 context.fillRect(grass.getPosition().x() * side, grass.getPosition().y() * side, side, side);
@@ -71,18 +96,20 @@ public class MapView extends StackPane implements MapChangeSubscriber {
         });
     }
 
-    private void prepareCanvas(Boundary boundary) {
+    private GraphicsContext makeGraphicsContext(Boundary boundary) {
         Canvas canvas;
         if (boundary.width() > boundary.height()) {
-            side = 600 / boundary.width();
-            canvas = new Canvas(600, side * boundary.height());
+            side = canvasSide / boundary.width();
+            canvasSide = side * boundary.width(); // counter rounding errors
+            canvas = new Canvas(canvasSide, side * boundary.height());
         } else {
-            side = 600 / boundary.height();
-            canvas = new Canvas(boundary.width() * side, 600);
+            side = canvasSide / boundary.height();
+            canvasSide = side * boundary.height(); // counter rounding errors
+            canvas = new Canvas(boundary.width() * side, canvasSide);
         }
         canvas.setOnMouseClicked(this::mouseClickHandler);
         getChildren().add(canvas);
-        context = canvas.getGraphicsContext2D();
+        return canvas.getGraphicsContext2D();
     }
 
     private void mouseClickHandler(MouseEvent event) {
@@ -98,7 +125,6 @@ public class MapView extends StackPane implements MapChangeSubscriber {
         if (!animalsByPosition.containsKey(approximatedVector)) {
             return;
         }
-
 
         var animalsOnPosition = animalsByPosition.get(approximatedVector);
         animalsOnPosition.sort(new AnimalComparator());

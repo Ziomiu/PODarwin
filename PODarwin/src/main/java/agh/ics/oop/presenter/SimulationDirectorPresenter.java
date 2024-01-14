@@ -1,9 +1,11 @@
 package agh.ics.oop.presenter;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.util.HashMap;
@@ -60,8 +62,14 @@ public class SimulationDirectorPresenter {
 
     private SimulationHost addNewSimulationHost() {
         SimulationHost simulationHost = new SimulationHost(index);
+        HBox hBox = new HBox();
         Label label = new Label("Simulation %d".formatted(index));
-        runningSimulationsList.getChildren().add(label);
+        Label statusLabel = new Label(" - CONFIGURING");
+        hBox.getChildren().addAll(label, statusLabel);
+        simulationHost.addOnSimulationStateChanged(state -> {
+            Platform.runLater(() -> statusLabel.setText(" - " + state.toString()));
+        });
+        runningSimulationsList.getChildren().add(hBox);
         simulationHosts.put(index, simulationHost);
         index++;
         return simulationHost;

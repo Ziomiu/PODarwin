@@ -40,7 +40,8 @@
         AnchorPane.bottomAnchor="0"
         AnchorPane.leftAnchor="0"
         AnchorPane.rightAnchor="0"
-        text="Click + icon to add first simulation"
+        text="Click the + icon to add first simulation"
+        style="-fx-alignment: center;"
         fx:id="hintLabel"
     />
 </AnchorPane>

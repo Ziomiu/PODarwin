@@ -8,35 +8,34 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Spinner?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Separator?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="agh.ics.oop.presenter.SimulationConfigPresenter"
-      minHeight="800.0" minWidth="500.0">
+      minHeight="880.0" minWidth="500.0">
     <padding>
         <Insets top="10" right="25" bottom="10" left="25"/>
     </padding>
 
-    <Text text="Set up the simulation" style="-fx-font-size: 18px;" BorderPane.alignment="TOP_CENTER"/>
-
-    <HBox prefHeight="40" alignment="CENTER_LEFT">
+    <HBox prefHeight="32" alignment="CENTER_LEFT">
         <Label text="Alternating genomes" labelFor="$alternatingGenomesCheckbox"/>
         <Region prefWidth="32"/>
         <CheckBox fx:id="alternatingGenomesCheckbox"/>
     </HBox>
 
-    <HBox prefHeight="40" alignment="CENTER_LEFT">
+    <HBox prefHeight="32" alignment="CENTER_LEFT">
         <Label text="World wrap" labelFor="$wrappingWorldCheckbox"/>
         <Region prefWidth="32"/>
         <CheckBox fx:id="wrappingWorldCheckbox"/>
     </HBox>
 
-    <HBox prefHeight="40" alignment="CENTER_LEFT">
+    <HBox prefHeight="32" alignment="CENTER_LEFT">
         <Label text="Equator" labelFor="$equatorCheckbox"/>
         <Region prefWidth="32"/>
         <CheckBox fx:id="equatorCheckbox"/>
     </HBox>
+
+    <Separator style="-fx-padding: 10 0 10 0"/>
 
     <HBox prefHeight="40" alignment="CENTER_LEFT">
         <Label text="Map size:"/>
@@ -111,29 +110,40 @@
         <Region prefWidth="32"/>
         <Spinner fx:id="reproductionMutationsMaxField" min="0" max="10" prefWidth="80"/>
     </HBox>
-    <HBox prefHeight="20" alignment="CENTER">
+
+    <Separator style="-fx-padding: 10 0 10 0"/>
+
+    <HBox prefHeight="40" alignment="CENTER_LEFT">
+        <Label text="Save current config to:" labelFor="$saveConfigButton"/>
+        <Region prefWidth="32"/>
         <Button
                 fx:id="saveConfigButton"
-                text="Save Config"
+                text="Select File"
                 onAction="#saveConfig"
         />
     </HBox>
-    <HBox prefHeight="20" alignment="CENTER">
-        <Button
-                fx:id="savesStatsButton"
-                text="Save Stats"
-                onAction="#saveStats"
-        />
-    </HBox>
-    <HBox prefHeight="30" alignment="CENTER">
+    <HBox prefHeight="40" alignment="CENTER_LEFT">
+        <Label text="Read config from:" labelFor="$readFileButton"/>
+        <Region prefWidth="32"/>
         <Button
                 fx:id="readFileButton"
-                text="Read Config"
+                text="Select File"
                 onAction="#loadConfig"
         />
     </HBox>
+    <HBox prefHeight="40" alignment="CENTER_LEFT">
+        <Label text="Record stats to:" labelFor="$savesStatsButton"/>
+        <Region prefWidth="32"/>
+        <Button
+                fx:id="savesStatsButton"
+                text="Select File"
+                onAction="#saveStats"
+        />
+    </HBox>
 
-    <HBox alignment="CENTER" style="-fx-padding: 2em 0 0 0;">
+    <Separator style="-fx-padding: 10 0 10 0"/>
+
+    <HBox alignment="CENTER" style="-fx-padding: 1em 0 0 0;">
         <Button
                 fx:id="startValidateButton"
                 text="Go!"
