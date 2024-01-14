@@ -80,9 +80,9 @@ public class GlobalStatsNumbers extends FlowPane implements StatsSubscriber<Glob
             totalAnimalsLabel.setText(String.valueOf(statsEvent.totalAnimals()));
             placesLeft.setText(String.valueOf(statsEvent.placesLeft()));
             totalTunnelsLabel.setText(String.valueOf(statsEvent.totalTunnels()));
-            averageLifetimeLabel.setText(String.valueOf(statsEvent.averageLifetime()));
-            averageChildrenLabel.setText(String.valueOf(statsEvent.averageChildren()));
-            averageEnergyLabel.setText(String.valueOf(statsEvent.averageEnergy()));
+            averageLifetimeLabel.setText(String.format("%.2f", statsEvent.averageLifetime()));
+            averageChildrenLabel.setText(String.format("%.2f", statsEvent.averageChildren()));
+            averageEnergyLabel.setText(String.format("%.2f", statsEvent.averageEnergy()));
             dayLabel.setText(String.valueOf(statsEvent.day()));
             mostPopularGenomeLabel.setText(statsEvent.mostPopularGenome());
         });

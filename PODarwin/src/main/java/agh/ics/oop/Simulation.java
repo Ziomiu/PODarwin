@@ -145,6 +145,7 @@ public class Simulation implements Runnable {
         SummaryPhase summaryPhase = new SummaryPhase();
         summaryPhase.setDay(day);
         visitLayers(summaryPhase);
+        GlobalStatsEvent globalStatsEvent = summaryPhase.getGlobalStats();
 
         MapChangeEvent mapChangeEvent = new MapChangeEvent(
             day,
@@ -152,14 +153,15 @@ public class Simulation implements Runnable {
             summaryPhase.getPreferredGrassFields(),
             summaryPhase.getAnimals(),
             summaryPhase.getGrass(),
-            summaryPhase.getTunnels()
+            summaryPhase.getTunnels(),
+            globalStatsEvent.mostPopularGenome()
         );
 
         for (var subscriber : mapChangeSubscribers) {
             subscriber.onMapChange(mapChangeEvent);
         }
         for (var subscriber : globalStatsSubscribers) {
-            subscriber.updateStats(summaryPhase.getGlobalStats());
+            subscriber.updateStats(globalStatsEvent);
         }
 
         if (animalToFollow != null) {

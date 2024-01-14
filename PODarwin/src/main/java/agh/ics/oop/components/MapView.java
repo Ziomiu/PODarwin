@@ -3,6 +3,7 @@ package agh.ics.oop.components;
 import agh.ics.oop.model.classes.Animal;
 import agh.ics.oop.model.classes.Boundary;
 import agh.ics.oop.model.classes.Vector2D;
+import agh.ics.oop.model.enums.Genome;
 import agh.ics.oop.model.visualization.MapChangeEvent;
 import agh.ics.oop.model.visualization.MapChangeSubscriber;
 import agh.ics.oop.utils.AnimalComparator;
@@ -22,7 +23,8 @@ import java.util.function.Consumer;
 
 public class MapView extends StackPane implements MapChangeSubscriber {
     private GraphicsContext context;
-    private GraphicsContext helperContext;
+    private GraphicsContext grassHelperContext;
+    private GraphicsContext animalHelperContext;
     private Set<Animal> animals;
     private HashMap<Vector2D, ArrayList<Animal>> animalsByPosition;
     private Consumer<Animal> animalSelectedEventHandler;
@@ -31,6 +33,7 @@ public class MapView extends StackPane implements MapChangeSubscriber {
     ObservableBooleanValue pauseState;
     Animal selectedAnimal;
     Boundary preferredGrassFields;
+    String preferredGenome;
 
     public MapView() {
         pauseState = new SimpleBooleanProperty(false);
@@ -50,8 +53,8 @@ public class MapView extends StackPane implements MapChangeSubscriber {
             return;
         }
 
-        helperContext.setFill(Color.web("magenta", 0.5));
-        helperContext.fillRect(
+        grassHelperContext.setFill(Color.web("magenta", 0.5));
+        grassHelperContext.fillRect(
             preferredGrassFields.lower().x() * side,
             preferredGrassFields.lower().y() * side,
             preferredGrassFields.width() * side,
@@ -59,8 +62,33 @@ public class MapView extends StackPane implements MapChangeSubscriber {
         );
     }
 
-    public void clearHighlight() {
-        helperContext.clearRect(0, 0, canvasSide, canvasSide);
+    public void highlightPreferredGenomeFields() {
+        animalHelperContext.setFill(Color.web("#ff0", 0.7));
+        for (var animal : animals) {
+            var animalGenome = String.join(
+                "",
+                animal.getGenomeSequence().getAllGenomes().stream().map(Genome::ordinal).map(String::valueOf).toList()
+            );
+
+            if (!animalGenome.equals(preferredGenome)) {
+                continue;
+            }
+
+            animalHelperContext.fillRect(
+                animal.getPosition().x() * side,
+                animal.getPosition().y() * side,
+                side,
+                side
+            );
+        }
+    }
+
+    public void clearGrassContext() {
+        grassHelperContext.clearRect(0, 0, canvasSide, canvasSide);
+    }
+
+    public void clearAnimalContext() {
+        animalHelperContext.clearRect(0, 0, canvasSide, canvasSide);
     }
 
     @Override
@@ -68,10 +96,12 @@ public class MapView extends StackPane implements MapChangeSubscriber {
         Platform.runLater(() -> {
             if (context == null) {
                 context = makeGraphicsContext(event.worldBoundary());
-                helperContext = makeGraphicsContext(event.worldBoundary());
+                grassHelperContext = makeGraphicsContext(event.worldBoundary());
+                animalHelperContext = makeGraphicsContext(event.worldBoundary());
             }
 
             preferredGrassFields = event.preferredGrassFields();
+            preferredGenome = event.mostPopularGenome();
 
             context.setFill(Color.web("#cfdfa5"));
             context.fillRect(0, 0, canvasSide, canvasSide);
@@ -80,7 +110,7 @@ public class MapView extends StackPane implements MapChangeSubscriber {
                 animalsByPosition.clear();
             }
 
-            clearHighlight();
+            clearGrassContext();
             for (var grass : event.grass()) {
                 context.setFill(grass.getColor());
                 context.fillRect(grass.getPosition().x() * side, grass.getPosition().y() * side, side, side);
