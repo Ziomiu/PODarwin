@@ -8,8 +8,10 @@ import agh.ics.oop.model.visualization.MapChangeSubscriber;
 import agh.ics.oop.model.visualization.StatsSubscriber;
 import agh.ics.oop.model.world.layers.MapLayer;
 import agh.ics.oop.model.world.phases.*;
+import javafx.beans.value.ObservableBooleanValue;
 
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 
 public class Simulation implements Runnable {
     private HashMap<Animal, Vector2D> animalMoves;
@@ -18,6 +20,9 @@ public class Simulation implements Runnable {
     private final List<MapChangeSubscriber> mapChangeSubscribers;
     private final List<StatsSubscriber<GlobalStatsEvent>> globalStatsSubscribers;
     private int day = 0;
+    private ObservableBooleanValue pauseState;
+    private boolean pauseRequested = false;
+    private CountDownLatch pauseLatch;
 
     public Simulation() {
         animalMoves = new HashMap<>();
@@ -38,9 +43,14 @@ public class Simulation implements Runnable {
         bootstrapSimulation();
 
         try {
-            for (var i = 0; i < 100; i++) {
-                day++;
+            while (true) {
                 System.out.printf("===== day %d =====%n", day);
+                if (pauseRequested) {
+                    pauseLatch = new CountDownLatch(1);
+                    pauseLatch.await();
+                }
+
+                day++;
                 advanceSimulation();
                 Thread.sleep(500);
             }
@@ -55,6 +65,20 @@ public class Simulation implements Runnable {
 
     public void addGlobalStatsSubscriber(StatsSubscriber<GlobalStatsEvent> subscriber) {
         globalStatsSubscribers.add(subscriber);
+    }
+
+    public void setPauseState(ObservableBooleanValue observableBooleanValue) {
+        pauseState = observableBooleanValue;
+        pauseState.addListener((var e) -> this.handlePauseStateChange());
+    }
+
+    private synchronized void handlePauseStateChange() {
+        if (pauseState.get()) {
+            pauseRequested = true;
+        } else {
+            pauseRequested = false;
+            pauseLatch.countDown();
+        }
     }
 
     private void advanceSimulation() {

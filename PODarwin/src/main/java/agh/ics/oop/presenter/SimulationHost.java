@@ -2,6 +2,9 @@ package agh.ics.oop.presenter;
 
 import agh.ics.oop.Simulation;
 import agh.ics.oop.model.world.layers.MapLayer;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
@@ -41,6 +44,7 @@ public class SimulationHost {
         HBox viewRoot = loader.load();
         simulationPresenter = loader.getController();
 
+        simulation.setPauseState(simulationPresenter.getPauseState());
         simulationPresenter.getMapChangeSubscribers().forEach(simulation::addMapChangeSubscriber);
         simulationPresenter.getGlobalStatsSubscribers().forEach(simulation::addGlobalStatsSubscriber);
 
