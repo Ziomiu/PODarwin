@@ -11,6 +11,10 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.opencsv.ICSVParser.DEFAULT_ESCAPE_CHARACTER;
+import static com.opencsv.ICSVParser.DEFAULT_QUOTE_CHARACTER;
+import static com.opencsv.ICSVWriter.DEFAULT_LINE_END;
+
 public class CsvWriter {
     public File openSaveStatsDialog() {
         FileChooser fileChooser = new FileChooser();
@@ -29,7 +33,13 @@ public class CsvWriter {
         String csvFilePath = file.toString();
         try {
             FileWriter fileWriter = new FileWriter(csvFilePath,true);
-            CSVWriter csvWriter = new CSVWriter(fileWriter);
+            CSVWriter csvWriter = new CSVWriter(
+                fileWriter,
+                ';',
+                DEFAULT_QUOTE_CHARACTER,
+                DEFAULT_ESCAPE_CHARACTER,
+                DEFAULT_LINE_END
+            );
 
             if(!containsData(file)) {
                 String[] header = {"Day", "TotalGrass", "TotalAnimals","MostPopularGenome","Total tunnels",
