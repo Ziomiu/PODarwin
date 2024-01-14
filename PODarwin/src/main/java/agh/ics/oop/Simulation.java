@@ -21,6 +21,7 @@ public class Simulation implements Runnable {
     private int day = 0;
     private ObservableBooleanValue pauseState;
     private boolean pauseRequested = false;
+    private boolean endRequested = false;
     private CountDownLatch pauseLatch;
     private Animal animalToFollow;
 
@@ -45,7 +46,7 @@ public class Simulation implements Runnable {
         bootstrapSimulation();
 
         try {
-            while (true) {
+            while (!endRequested) {
                 System.out.printf("===== day %d =====%n", day);
                 if (pauseRequested) {
                     pauseLatch = new CountDownLatch(1);
@@ -57,7 +58,7 @@ public class Simulation implements Runnable {
                 Thread.sleep(500);
             }
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            // todo: probably came from executorservice, clean up and return
         }
     }
 
@@ -80,6 +81,11 @@ public class Simulation implements Runnable {
 
     public void setAnimalToFollow(Animal animal) {
         animalToFollow = animal;
+    }
+
+    public void requestEnd() {
+        pauseLatch.countDown();
+        endRequested = true;
     }
 
     private void handlePauseStateChange() {
