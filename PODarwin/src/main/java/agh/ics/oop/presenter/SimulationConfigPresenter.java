@@ -207,6 +207,7 @@ public class SimulationConfigPresenter {
     @FXML
     public void readConfigs() {
         ConfigReader configReader = new ConfigReader();
+        ConfigOptions.getItems().clear();
         ConfigOptions.getItems().addAll(configReader.getConfigs());
 
     }
