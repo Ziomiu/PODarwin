@@ -1,5 +1,7 @@
 package agh.ics.oop.model.classes;
 
+import java.util.Objects;
+
 public record Vector2D(int x, int y) implements Comparable<Vector2D> {
 
     @Override
@@ -41,6 +43,11 @@ public record Vector2D(int x, int y) implements Comparable<Vector2D> {
         if (!(other instanceof Vector2D Vector2D))
             return false;
         return x == Vector2D.x && y == Vector2D.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 
     @Override

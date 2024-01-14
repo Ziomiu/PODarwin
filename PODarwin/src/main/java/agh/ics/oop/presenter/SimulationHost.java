@@ -2,9 +2,6 @@ package agh.ics.oop.presenter;
 
 import agh.ics.oop.Simulation;
 import agh.ics.oop.model.world.layers.MapLayer;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ObservableBooleanValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
@@ -19,7 +16,7 @@ public class SimulationHost {
     private SimulationPresenter simulationPresenter;
     private final Simulation simulation;
     private Consumer<Runnable> simulationStartHandler;
-    private int id;
+    private final int id;
 
     public SimulationHost(int id) {
         simulation = new Simulation();
@@ -47,6 +44,8 @@ public class SimulationHost {
         simulation.setPauseState(simulationPresenter.getPauseState());
         simulationPresenter.getMapChangeSubscribers().forEach(simulation::addMapChangeSubscriber);
         simulationPresenter.getGlobalStatsSubscribers().forEach(simulation::addGlobalStatsSubscriber);
+        simulationPresenter.getAnimalChangeSubscribers().forEach(simulation::addAnimalStatsSubscriber);
+        simulationPresenter.setOnAnimalSelected(simulation::setAnimalToFollow);
 
         Scene scene = new Scene(viewRoot);
         simulationStage.setTitle("Simulation #%d".formatted(id));

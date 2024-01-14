@@ -7,10 +7,11 @@ import agh.ics.oop.model.visualization.MapChangeEvent;
 import agh.ics.oop.model.visualization.MapChangeSubscriber;
 import agh.ics.oop.utils.AnimalComparator;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
@@ -25,13 +26,20 @@ public class MapView extends StackPane implements MapChangeSubscriber {
     private HashMap<Vector2D, ArrayList<Animal>> animalsByPosition;
     private Consumer<Animal> animalSelectedEventHandler;
     int side = 1;
+    ObservableBooleanValue pauseState;
+    Animal selectedAnimal;
 
     public MapView() {
+        pauseState = new SimpleBooleanProperty(false);
         animalsByPosition = new HashMap<>();
     }
 
     public void addOnAnimalSelected(Consumer<Animal> handler) {
         animalSelectedEventHandler = handler;
+    }
+
+    public void setPauseState(ObservableBooleanValue pauseState) {
+        this.pauseState = pauseState;
     }
 
     @Override
@@ -58,8 +66,7 @@ public class MapView extends StackPane implements MapChangeSubscriber {
                 context.fillRect(tunnel.getOutPosition().x() * side, tunnel.getOutPosition().y() * side, side, side);
             }
             for (var animal : event.animals()) {
-                context.setFill(animal.getColor());
-                context.fillRect(animal.getPosition().x() * side, animal.getPosition().y() * side, side, side);
+                paintSelectedAnimal(animal);
             }
         });
     }
@@ -79,7 +86,7 @@ public class MapView extends StackPane implements MapChangeSubscriber {
     }
 
     private void mouseClickHandler(MouseEvent event) {
-        if (animals.isEmpty() || animalSelectedEventHandler == null) {
+        if (animals.isEmpty() || animalSelectedEventHandler == null || !pauseState.get()) {
             return;
         }
 
@@ -92,14 +99,43 @@ public class MapView extends StackPane implements MapChangeSubscriber {
             return;
         }
 
+
         var animalsOnPosition = animalsByPosition.get(approximatedVector);
         animalsOnPosition.sort(new AnimalComparator());
+        if (animals.size() > 1) {
+            // avoid race condition in painting over the same animal
+            restoreCanvasUnderAnimal(selectedAnimal);
+        }
+        selectedAnimal = animalsOnPosition.get(0);
+        paintSelectedAnimal(selectedAnimal, Color.MAGENTA);
         animalSelectedEventHandler.accept(animalsOnPosition.get(0));
     }
 
     private void fillAnimalsByPosition() {
         for (var animal : animals) {
-            animalsByPosition.getOrDefault(animal.getPosition(), new ArrayList<>()).add(animal);
+            var listByPosition = animalsByPosition.getOrDefault(animal.getPosition(), new ArrayList<>());
+            listByPosition.add(animal);
+            animalsByPosition.put(animal.getPosition(), listByPosition);
         }
+    }
+
+    private void paintSelectedAnimal(Animal animal) {
+        paintSelectedAnimal(animal, animal.getColor());
+    }
+
+    private void paintSelectedAnimal(Animal animal, Color color) {
+        context.setFill(color);
+        context.fillRect(animal.getPosition().x() * side, animal.getPosition().y() * side, side, side);
+    }
+
+    private void restoreCanvasUnderAnimal(Animal animal) {
+        if (animal == null) {
+            return;
+        }
+
+        Platform.runLater(() -> {
+            context.setFill(animal.getColor());
+            context.fillRect(animal.getPosition().x() * side, animal.getPosition().y() * side, side, side);
+        });
     }
 }
