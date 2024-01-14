@@ -3,6 +3,7 @@ package agh.ics.oop.presenter;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
 import java.util.HashMap;
@@ -15,6 +16,8 @@ public class SimulationDirectorPresenter {
     Button addSimulationButton;
     @FXML
     VBox runningSimulationsList;
+    @FXML
+    Label hintLabel;
 
     Map<Integer, SimulationHost> simulationHosts;
 
@@ -26,6 +29,10 @@ public class SimulationDirectorPresenter {
         executorService = Executors.newFixedThreadPool(4);
         simulationHosts = new HashMap<>();
         addSimulationButton.setOnMouseClicked((var e) -> {
+            if (hintLabel.getParent() != null) {
+                ((AnchorPane)hintLabel.getParent()).getChildren().remove(hintLabel);
+            }
+
             SimulationHost host = addNewSimulationHost();
             try {
                 host.bootstrap();
