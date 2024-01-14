@@ -5,15 +5,36 @@
 <?import agh.ics.oop.components.GlobalStatsNumbers?>
 <?import agh.ics.oop.components.CoverageGraph?>
 <?import agh.ics.oop.components.MapView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<?import agh.ics.oop.components.AnimalStatsNumbers?>
 <HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="agh.ics.oop.presenter.SimulationPresenter"
-      minHeight="720.0" minWidth="1280.0" style="-fx-padding: 10;">
-    <VBox prefWidth="440.0">
+      minHeight="800.0" minWidth="1280.0" style="-fx-padding: 10;" spacing="20">
+    <VBox prefWidth="440.0" spacing="10">
         <GlobalStatsNumbers fx:id="globalStatsNumbers"/>
         <CoverageGraph fx:id="coverageGraph"/>
+        <AnimalStatsNumbers VBox.vgrow="ALWAYS" style="-fx-border-radius: 1em; -fx-border-color: #d9d9d9"/>
+        <HBox alignment="CENTER">
+            <Button
+                    fx:id="pauseButton"
+                    text="⏸"
+                    style="
+                    -fx-font-size: 2em;
+                    -fx-text-fill: white;
+                    -fx-background-color: linear-gradient(to bottom right, #00f42f, #04cf13);
+                    -fx-min-width: 3em;
+                    -fx-min-height: 3em;
+                    -fx-max-width: 3em;
+                    -fx-max-height: 3em;
+                    -fx-background-radius: 3em;
+                "
+            />
+        </HBox>
     </VBox>
-    <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
-        <MapView fx:id="mapView"/>
-    </VBox>
+    <MapView
+        fx:id="mapView"
+        HBox.hgrow="ALWAYS"
+    />
 </HBox>

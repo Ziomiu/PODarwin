@@ -3,7 +3,7 @@ package agh.ics.oop;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class App extends Application {
@@ -11,7 +11,7 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("director.fxml"));
-        VBox viewRoot = loader.load();
+        AnchorPane viewRoot = loader.load();
         Scene scene = new Scene(viewRoot);
         primaryStage.setTitle("Simulation Director");
         primaryStage.minWidthProperty().bind(viewRoot.minWidthProperty());

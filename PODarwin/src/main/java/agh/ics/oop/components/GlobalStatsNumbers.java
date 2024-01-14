@@ -5,6 +5,7 @@ import agh.ics.oop.model.visualization.StatsSubscriber;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.OverrunStyle;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 
@@ -19,13 +20,23 @@ public class GlobalStatsNumbers extends FlowPane implements StatsSubscriber<Glob
 
     public GlobalStatsNumbers() {
         totalGrassLabel = new Label("0");
+        totalGrassLabel.setPrefWidth(105);
         totalAnimalsLabel = new Label("0");
+        totalAnimalsLabel.setPrefWidth(85);
         placesLeft = new Label("0");
-        mostPopularGenomeLabel = new Label("ABCABC");
+        placesLeft.setPrefWidth(85);
+        mostPopularGenomeLabel = new Label("        ");
+        mostPopularGenomeLabel.setPrefWidth(160);
+        mostPopularGenomeLabel.setTextOverrun(OverrunStyle.ELLIPSIS);
         totalTunnelsLabel = new Label("0");
+        totalTunnelsLabel.setPrefWidth(85);
         averageLifetimeLabel = new Label("0.0");
+        averageLifetimeLabel.setPrefWidth(110);
         averageChildrenLabel = new Label("0.0");
+        averageChildrenLabel.setPrefWidth(110);
 
+
+        setAlignment(Pos.CENTER);
         setHgap(8);
         setVgap(8);
 

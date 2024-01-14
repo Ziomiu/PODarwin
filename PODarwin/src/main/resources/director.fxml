@@ -4,15 +4,43 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ScrollPane?>
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="agh.ics.oop.presenter.SimulationDirectorPresenter"
-      minHeight="200.0" minWidth="330.0">
-    <HBox>
-        <Button fx:id="addSimulationButton" text="Add"/>
-    </HBox>
-    <ScrollPane>
+<?import javafx.scene.control.Label?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="agh.ics.oop.presenter.SimulationDirectorPresenter"
+            minHeight="200.0" minWidth="330.0">
+    <Button
+        viewOrder="-Infinity"
+        AnchorPane.bottomAnchor="20"
+        AnchorPane.rightAnchor="20"
+        fx:id="addSimulationButton"
+        style="
+            -fx-font-size: 1.8em;
+            -fx-text-fill: white;
+            -fx-background-color: linear-gradient(to bottom right, #00f42f, #04cf13);
+            -fx-min-width: 2.2em;
+            -fx-min-height: 2.2em;
+            -fx-max-width: 2.2em;
+            -fx-max-height: 2.2em;
+            -fx-background-radius: 2em;
+        "
+        text="+"
+    />
+    <ScrollPane
+        AnchorPane.rightAnchor="0"
+        AnchorPane.leftAnchor="0"
+        AnchorPane.bottomAnchor="0"
+        AnchorPane.topAnchor="0"
+    >
         <VBox fx:id="runningSimulationsList" spacing="10" style="-fx-padding: 10">
         </VBox>
     </ScrollPane>
-</VBox>
+    <Label
+        AnchorPane.topAnchor="0"
+        AnchorPane.bottomAnchor="0"
+        AnchorPane.leftAnchor="0"
+        AnchorPane.rightAnchor="0"
+        text="Click + icon to add first simulation"
+        fx:id="hintLabel"
+    />
+</AnchorPane>

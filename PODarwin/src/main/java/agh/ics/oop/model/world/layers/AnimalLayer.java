@@ -83,6 +83,11 @@ public class AnimalLayer extends AbstractLayer {
         phase.setEatenGrass(eatenGrass);
     }
 
+    @Override
+    public void handle(SummaryPhase phase) {
+        phase.setAnimals(animals);
+    }
+
     public HashSet<Animal> getAnimals() {
         return animals;
     }

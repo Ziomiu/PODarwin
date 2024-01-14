@@ -43,7 +43,7 @@ public class Animal implements WorldElement, Drawable {
 
     @Override
     public Color getColor() {
-        return Color.BROWN;
+        return Color.hsb(30, Math.max(0.2, Math.min(20 + energy, 100) / 100.0), Math.min(Math.max(energy, 40), 100) / 100.0);
     }
 
     public void setPosition(Vector2D newPosition) {

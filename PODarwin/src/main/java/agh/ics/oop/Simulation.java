@@ -17,6 +17,7 @@ public class Simulation implements Runnable {
     private final HashSet<Vector2D> permanentlyBlockedFields;
     private final List<MapChangeSubscriber> mapChangeSubscribers;
     private final List<StatsSubscriber<GlobalStatsEvent>> globalStatsSubscribers;
+    private int day = 0;
 
     public Simulation() {
         animalMoves = new HashMap<>();
@@ -38,7 +39,8 @@ public class Simulation implements Runnable {
 
         try {
             for (var i = 0; i < 100; i++) {
-                System.out.printf("===== day %d =====%n", i);
+                day++;
+                System.out.printf("===== day %d =====%n", day);
                 advanceSimulation();
                 Thread.sleep(500);
             }
@@ -81,6 +83,7 @@ public class Simulation implements Runnable {
         visitLayers(summaryPhase);
 
         MapChangeEvent mapChangeEvent = new MapChangeEvent(
+            day,
             summaryPhase.getMapBoundary(),
             summaryPhase.getAnimals(),
             summaryPhase.getGrass(),
@@ -92,7 +95,7 @@ public class Simulation implements Runnable {
         }
 
         for (var subscriber : globalStatsSubscribers) {
-            subscriber.updateStats(new GlobalStatsEvent(10, 10, "AAABBBCCC", 10, 10, 10, 10));
+            subscriber.updateStats(new GlobalStatsEvent(10, 10, "AAABBBCCCDDD", 10, 10, 10, 10));
         }
     }
 
