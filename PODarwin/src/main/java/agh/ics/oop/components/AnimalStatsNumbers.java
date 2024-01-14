@@ -5,6 +5,7 @@ import agh.ics.oop.model.visualization.StatsSubscriber;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
@@ -18,6 +19,7 @@ public class AnimalStatsNumbers extends VBox implements StatsSubscriber<AnimalSt
     public AnimalStatsNumbers() {
         setPadding(new Insets(10, 10, 10, 10));
         statsGrid = new GridPane();
+        statsGrid.getColumnConstraints().add(new ColumnConstraints(160));
         hintLabel = new Label("Pause the simulation to select an animal to follow");
         getChildren().addAll(hintLabel, statsGrid);
     }

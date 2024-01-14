@@ -1,6 +1,7 @@
 package agh.ics.oop.presenter;
 
 import agh.ics.oop.Simulation;
+import agh.ics.oop.model.enums.SimulationStatus;
 import agh.ics.oop.model.world.layers.MapLayer;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +11,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class SimulationHost {
@@ -17,17 +20,24 @@ public class SimulationHost {
     private final Stage simulationStage;
     private final Simulation simulation;
     private Consumer<Runnable> simulationStartHandler;
+    private List<Consumer<SimulationStatus>> simulationStateChangeSubscribers;
     private final int id;
 
     public SimulationHost(int id) {
         configStage = new Stage();
         simulationStage = new Stage();
         simulation = new Simulation();
+        simulationStateChangeSubscribers = new LinkedList<>();
         this.id = id;
     }
 
     public void setOnSimulationStart(Consumer<Runnable> handler) {
         simulationStartHandler = handler;
+    }
+
+    public void addOnSimulationStateChanged(Consumer<SimulationStatus> handler) {
+        simulationStateChangeSubscribers.add(handler);
+        simulation.addOnSimulationStateChanged(handler);
     }
 
     public void bootstrap() throws Exception {
@@ -61,6 +71,7 @@ public class SimulationHost {
         simulationPresenter.getGlobalStatsSubscribers().forEach(simulation::addGlobalStatsSubscriber);
         simulationPresenter.getAnimalChangeSubscribers().forEach(simulation::addAnimalStatsSubscriber);
         simulationPresenter.setOnAnimalSelected(simulation::setAnimalToFollow);
+        simulation.setSimulationSpeedValue(simulationPresenter.getSpeedValue());
 
         Scene scene = new Scene(viewRoot);
         simulationStage.setTitle("Simulation #%d".formatted(id));
@@ -85,6 +96,9 @@ public class SimulationHost {
         configStage.initOwner(simulationStage);
         configStage.initModality(Modality.WINDOW_MODAL);
         configStage.setOnCloseRequest((var e) -> {
+            for (var handler : simulationStateChangeSubscribers) {
+                handler.accept(SimulationStatus.ABORTED);
+            }
             Platform.runLater(simulationStage::close);
         });
         return configStage;

@@ -23,6 +23,7 @@ public class StatsGenerator {
     }
 
     public GlobalStatsEvent generateStats() {
+        int day = summaryPhase.getDay();
         int grassCount = summaryPhase.getGrass().size();
         int animalCount = summaryPhase.getAnimals().size();
         int tunnelsCount = summaryPhase.getTunnels().size();
@@ -31,6 +32,7 @@ public class StatsGenerator {
         double averageLifeTime = getAverageLifeTime();
         double averageChildren = getAverageChildren();
         String averageGenotype = getAverageGenotype();
+        stats.add(String.valueOf(day));
         stats.add(String.valueOf(grassCount));
         stats.add(String.valueOf(animalCount));
         stats.add(String.valueOf(tunnelsCount));
@@ -39,7 +41,7 @@ public class StatsGenerator {
         stats.add(String.valueOf(BigDecimal.valueOf(getAverageLifeTime()).setScale(2, RoundingMode.HALF_UP)));
         stats.add(String.valueOf(BigDecimal.valueOf(getAverageChildren()).setScale(2, RoundingMode.HALF_UP)));
         stats.add(averageGenotype);
-        return new GlobalStatsEvent(grassCount, animalCount, averageGenotype, tunnelsCount, placesLeft,
+        return new GlobalStatsEvent(day, grassCount, animalCount, averageGenotype, tunnelsCount, placesLeft,
             averageLifeTime, averageChildren, averageEnergy);
     }
 

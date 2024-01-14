@@ -7,6 +7,7 @@
 <?import agh.ics.oop.components.MapView?>
 <?import javafx.scene.control.Button?>
 <?import agh.ics.oop.components.AnimalStatsNumbers?>
+<?import agh.ics.oop.components.PausedView?>
 <HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="agh.ics.oop.presenter.SimulationPresenter"
@@ -15,6 +16,7 @@
         <GlobalStatsNumbers fx:id="globalStatsNumbers"/>
         <CoverageGraph fx:id="coverageGraph"/>
         <AnimalStatsNumbers fx:id="animalStats" VBox.vgrow="ALWAYS" style="-fx-border-radius: 1em; -fx-border-color: #d9d9d9"/>
+        <PausedView VBox.vgrow="ALWAYS" fx:id="pausedView" style="-fx-border-radius: 1em; -fx-border-color: #d9d9d9"/>
         <HBox alignment="CENTER">
             <Button
                     fx:id="pauseButton"

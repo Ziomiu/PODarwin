@@ -2,14 +2,17 @@ package agh.ics.oop;
 
 import agh.ics.oop.model.classes.Animal;
 import agh.ics.oop.model.classes.Vector2D;
+import agh.ics.oop.model.enums.SimulationStatus;
 import agh.ics.oop.model.visualization.*;
 import agh.ics.oop.model.world.layers.MapLayer;
 import agh.ics.oop.model.world.phases.*;
 import agh.ics.oop.utils.SingleStatsGenerator;
 import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.value.ObservableDoubleValue;
 
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
+import java.util.function.Consumer;
 
 public class Simulation implements Runnable {
     private HashMap<Animal, Vector2D> animalMoves;
@@ -18,8 +21,10 @@ public class Simulation implements Runnable {
     private final List<MapChangeSubscriber> mapChangeSubscribers;
     private final List<StatsSubscriber<GlobalStatsEvent>> globalStatsSubscribers;
     private final List<StatsSubscriber<AnimalStatsEvent>> animalStatsSubscribers;
+    private final List<Consumer<SimulationStatus>> simulationStatusSubscribers;
     private int day = 0;
     private ObservableBooleanValue pauseState;
+    private ObservableDoubleValue speedValue;
     private boolean pauseRequested = false;
     private boolean endRequested = false;
     private CountDownLatch pauseLatch;
@@ -32,6 +37,7 @@ public class Simulation implements Runnable {
         mapChangeSubscribers = new LinkedList<>();
         globalStatsSubscribers = new LinkedList<>();
         animalStatsSubscribers = new LinkedList<>();
+        simulationStatusSubscribers = new LinkedList<>();
     }
 
     public void initializeMapLayers(MapLayer firstLayer) {
@@ -43,20 +49,26 @@ public class Simulation implements Runnable {
             return;
         }
 
+        notifyStateChange(SimulationStatus.INITIALIZING);
         bootstrapSimulation();
+        notifyStateChange(SimulationStatus.RUNNING);
 
         try {
             while (!endRequested) {
                 if (pauseRequested) {
                     pauseLatch = new CountDownLatch(1);
+                    notifyStateChange(SimulationStatus.PAUSED);
                     pauseLatch.await();
+                    notifyStateChange(SimulationStatus.RUNNING);
                 }
 
                 day++;
                 advanceSimulation();
-                Thread.sleep(500);
+                Thread.sleep(speedValue == null ? 500 : (int)speedValue.get());
             }
         } catch (InterruptedException ignored) {
+        } finally {
+            notifyStateChange(SimulationStatus.EXITED);
         }
     }
 
@@ -72,9 +84,17 @@ public class Simulation implements Runnable {
         animalStatsSubscribers.add(subscriber);
     }
 
+    public void addOnSimulationStateChanged(Consumer<SimulationStatus> handler) {
+        simulationStatusSubscribers.add(handler);
+    }
+
     public void setPauseState(ObservableBooleanValue observableBooleanValue) {
         pauseState = observableBooleanValue;
         pauseState.addListener((var e) -> this.handlePauseStateChange());
+    }
+
+    public void setSimulationSpeedValue(ObservableDoubleValue observable) {
+        speedValue = observable;
     }
 
     public void setAnimalToFollow(Animal animal) {
@@ -84,6 +104,12 @@ public class Simulation implements Runnable {
     public void requestEnd() {
         pauseLatch.countDown();
         endRequested = true;
+    }
+
+    private void notifyStateChange(SimulationStatus status) {
+        for (var handler : simulationStatusSubscribers) {
+            handler.accept(status);
+        }
     }
 
     private void handlePauseStateChange() {
@@ -123,6 +149,7 @@ public class Simulation implements Runnable {
         MapChangeEvent mapChangeEvent = new MapChangeEvent(
             day,
             summaryPhase.getMapBoundary(),
+            summaryPhase.getPreferredGrassFields(),
             summaryPhase.getAnimals(),
             summaryPhase.getGrass(),
             summaryPhase.getTunnels()
