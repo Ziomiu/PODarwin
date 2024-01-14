@@ -3,7 +3,6 @@ package agh.ics.oop.model.classes;
 import java.util.HashSet;
 
 public record Boundary(Vector2D lower, Vector2D upper) {
-    //Returns width in fields
     public int width() {
         if (lower.x() == upper.x()) {
             return 1;
@@ -11,7 +10,6 @@ public record Boundary(Vector2D lower, Vector2D upper) {
         return Math.abs(upper.x() - lower.x()) + 1;
     }
 
-    //Returns height in fields
     public int height() {
         if (upper.y() == lower.y()) {
             return 1;

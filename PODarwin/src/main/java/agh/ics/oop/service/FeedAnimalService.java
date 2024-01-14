@@ -25,7 +25,6 @@ public class FeedAnimalService {
                     .get(position)
                     .get(groupedAnimals.get(position).size() - 1)
                     .getAnimalStats().increasePlantsConsumed();
-                System.out.println("Grass was eaten on position " + position);
                 removedGrass.add(grassPositions.get(position));
             }
         }

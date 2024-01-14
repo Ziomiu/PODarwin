@@ -42,6 +42,7 @@ class GrassLayerTest {
         GrowGrassPhase growGrassPhase = new GrowGrassPhase();
         growGrassPhase.setBlockedFields(blocked);
         growGrassPhase.setMapBoundary(boundary);
+        growGrassPhase.setEatenGrass(new HashSet<>());
         GrassLayer grassLayer = new GrassLayer(new GrassFactory(5), 10, 35, true);
         InitPhase initPhase = new InitPhase();
         initPhase.setMapBoundary(boundary);
@@ -64,6 +65,7 @@ class GrassLayerTest {
         GrowGrassPhase growGrassPhase = new GrowGrassPhase();
         growGrassPhase.setBlockedFields(blocked);
         growGrassPhase.setMapBoundary(boundary);
+        growGrassPhase.setEatenGrass(new HashSet<>());
         GrassLayer grassLayer = new GrassLayer(new GrassFactory(5), 10, 35, true);
         InitPhase initPhase = new InitPhase();
         initPhase.setMapBoundary(boundary);

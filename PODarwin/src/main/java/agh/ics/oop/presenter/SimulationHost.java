@@ -38,7 +38,6 @@ public class SimulationHost {
     }
 
     public void endSimulation() {
-        System.out.println("Requested end");
         Platform.runLater(() -> {
             if (configStage.isShowing()) {
                 configStage.close();

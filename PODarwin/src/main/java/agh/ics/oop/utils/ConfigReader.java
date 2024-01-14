@@ -6,9 +6,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class ConfigReader {
     public HashMap<String, Integer> readConfig() {
@@ -30,7 +28,7 @@ public class ConfigReader {
         try {
             configMap = objectMapper.readValue(file, HashMap.class);
         } catch (IOException e) {
-            System.err.println("Błąd podczas odczytu pliku JSON: " + file.getAbsolutePath());
+            System.err.println("Error loading JSON: " + file.getAbsolutePath());
             e.printStackTrace();
         }
         return configMap;

@@ -134,7 +134,6 @@ public class GrassLayer extends AbstractLayer {
 
     @Override
     public void handle(GrowGrassPhase phase) {
-        // todo: try to find better place for it
         phase.getEatenGrass().forEach(this.grass::remove);
         phase.getEatenGrass().forEach(this.equatorGrass::remove);
         phase.getEatenGrass().stream()
@@ -142,7 +141,7 @@ public class GrassLayer extends AbstractLayer {
             .forEach(phase.getBlockedFields()::remove);
         var blockedFields = phase.getBlockedFields();
         blockedFields.addAll(getAllGrassPositions());
-        phase.setBlockedFields(blockedFields);;
+        phase.setBlockedFields(blockedFields);
         if (this.hasEquator) {
             int freeEquatorFields = this.equator.numberOfFields() - this.equatorGrass.size();
             int freeNotEquatorFields = phase.getMapBoundary().numberOfFields() - this.grass.size() - this.equator.numberOfFields();
@@ -163,8 +162,6 @@ public class GrassLayer extends AbstractLayer {
     @Override
     public void handle(SummaryPhase phase) {
         phase.setGrass(Stream.concat(grass.stream(), equatorGrass.stream()).collect(Collectors.toSet()));
-        System.out.println("Trawa w summary");
-        System.out.println(phase.getGrass());
     }
 
     public HashSet<Grass> getGrass() {
@@ -173,10 +170,6 @@ public class GrassLayer extends AbstractLayer {
 
     public HashSet<Grass> getEquatorGrass() {
         return equatorGrass;
-    }
-
-    public Boundary getEquator() {
-        return equator;
     }
 
     public void setEquatorChance(double equatorChance) {

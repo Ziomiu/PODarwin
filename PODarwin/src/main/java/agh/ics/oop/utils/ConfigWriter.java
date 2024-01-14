@@ -26,7 +26,7 @@ public class ConfigWriter {
         try {
             objectMapper.writeValue(file, config);
         } catch (IOException e) {
-            System.err.println("Błąd podczas zapisu danych do pliku JSON: " + file.getAbsolutePath());
+            System.err.println("Error writing JSON: " + file.getAbsolutePath());
             e.printStackTrace();
         }
     }
