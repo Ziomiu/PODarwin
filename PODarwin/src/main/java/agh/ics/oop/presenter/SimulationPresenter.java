@@ -14,6 +14,7 @@ import javafx.beans.value.ObservableDoubleValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -41,10 +42,12 @@ public class SimulationPresenter {
         pausedView.visibleProperty().bind(pauseState);
         registerMapHighlight();
         mapView.setPauseState(pauseState);
+        String play = new String("⏵".getBytes(), StandardCharsets.UTF_8);
+        String pause = new String("⏸".getBytes(), StandardCharsets.UTF_8);
         pauseButton.setOnMouseClicked((var e) -> {
             Platform.runLater(() -> {
                 pauseState.set(!pauseState.get());
-                pauseButton.setText(pauseState.get() ? "⏵" : "⏸");
+                pauseButton.setText(pauseState.get() ? play : pause);
             });
         });
     }
