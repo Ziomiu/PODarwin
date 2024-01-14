@@ -42,8 +42,8 @@ public class CsvWriter {
             );
 
             if(!containsData(file)) {
-                String[] header = {"Day", "TotalGrass", "TotalAnimals","MostPopularGenome","Total tunnels",
-                "PlacesLeft","AverageLifetime","AverageChildren","AverageEnergy"};
+                String[] header = {"Day", "TotalGrass", "TotalAnimals","Total tunnels",
+                "PlacesLeft","AverageEnergy","AverageLifetime","AverageChildren","MostPopularGenotype",};
                 csvWriter.writeNext(header);
             }
             csvWriter.writeNext(stats);
