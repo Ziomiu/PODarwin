@@ -39,7 +39,7 @@ public class SimulationPresenter {
         animalStats.visibleProperty().bind(pauseState.not());
         animalStats.managedProperty().bind(pauseState.not());
         pausedView.visibleProperty().bind(pauseState);
-        pausedView.visibleProperty().bind(pauseState);
+        pausedView.managedProperty().bind(pauseState);
         registerMapHighlight();
         mapView.setPauseState(pauseState);
         String play = new String("⏵".getBytes(), StandardCharsets.UTF_8);
