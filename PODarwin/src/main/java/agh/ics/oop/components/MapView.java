@@ -111,6 +111,7 @@ public class MapView extends StackPane implements MapChangeSubscriber {
             }
 
             clearGrassContext();
+            clearAnimalContext();
             for (var grass : event.grass()) {
                 context.setFill(grass.getColor());
                 context.fillRect(grass.getPosition().x() * side, grass.getPosition().y() * side, side, side);
